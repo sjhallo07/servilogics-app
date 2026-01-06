@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
     PiPhoneDuotone,
@@ -8,6 +8,7 @@ import {
 import { workersData } from '@/data/services.data'
 import Button from '@/components/ui/Button'
 import type { Worker } from '@/@types/services'
+import type { Map as LeafletMap, Marker } from 'leaflet'
 
 const availabilityColors: Record<string, string> = {
     available: 'bg-green-500',
@@ -91,8 +92,8 @@ const WorkersMap = () => {
     const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null)
     const [selectedZone, setSelectedZone] = useState<string>('all')
     const mapRef = useRef<HTMLDivElement>(null)
-    const [mapInstance, setMapInstance] = useState<L.Map | null>(null)
-    const markersRef = useRef<L.Marker[]>([])
+    const [mapInstance, setMapInstance] = useState<LeafletMap | null>(null)
+    const markersRef = useRef<Marker[]>([])
 
     const zones = [...new Set(workersData.map(w => w.zone))]
 
@@ -124,8 +125,7 @@ const WorkersMap = () => {
                 mapInstance.remove()
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [mapInstance])
 
     useEffect(() => {
         const updateMarkers = async () => {
