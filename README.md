@@ -193,7 +193,9 @@ flowchart TD
     Actions --> Data
 ```
 
-![Architecture Diagram](public/img/diagrams/architecture.png)
+![Architecture Diagram](public/img/diagrams/architecture.svg)
+
+> Tip: To replace this placeholder image, export your Mermaid diagram as SVG from <https://mermaid.live> and save it to `public/img/diagrams/architecture.svg`.
 
 ## License
 

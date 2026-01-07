@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <rect width="100%" height="100%" fill="#0f172a"/>
+  <style>
+    .title { fill: #e2e8f0; font: 700 28px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, sans-serif; }
+    .label { fill: #cbd5e1; font: 600 16px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, sans-serif; }
+    .box { fill: #1f2937; stroke: #64748b; stroke-width: 2; rx: 8; ry: 8; }
+    .arrow { stroke: #94a3b8; stroke-width: 2; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+    </marker>
+  </defs>
+  <text x="40" y="50" class="title">Architecture Diagram (Placeholder)</text>
+  
+  <!-- Frontend box -->
+  <rect x="60" y="100" width="260" height="180" class="box"/>
+  <text x="80" y="130" class="label">Frontend (Vite + React + TS)</text>
+  <text x="80" y="155" class="label">UI Components</text>
+  <text x="80" y="178" class="label">Zustand, i18next, Leaflet</text>
+  
+  <!-- Backend box -->
+  <rect x="360" y="100" width="260" height="180" class="box"/>
+  <text x="380" y="130" class="label">Backend (Node/Express)</text>
+  <text x="380" y="155" class="label">REST API, Auth</text>
+  <text x="380" y="178" class="label">Services, Workers, Inventory</text>
+  
+  <!-- Integrations box -->
+  <rect x="660" y="100" width="240" height="180" class="box"/>
+  <text x="680" y="130" class="label">Integrations</text>
+  <text x="680" y="155" class="label">PayPal, Mercado Libre</text>
+  <text x="680" y="178" class="label">Email/SMS</text>
+  
+  <!-- Arrows -->
+  <line x1="320" y1="190" x2="360" y2="190" class="arrow"/>
+  <line x1="620" y1="190" x2="660" y2="190" class="arrow"/>
+  
+  <!-- Footer note -->
+  <text x="40" y="510" class="label">Replace this placeholder by exporting diagrams from mermaid.live and saving into public/img/diagrams/</text>
+</svg>
