@@ -2,7 +2,7 @@ import { Router } from 'express'
 import validateAgentRequest from '../middleware/validateAgentRequest.js'
 import { HEARTBEAT_MS, TIMEOUT_MS, MAX_NONSTREAM_RESP_BYTES } from '../utils/agentPolicy.js'
 import { initSSE, writeEvent, startHeartbeat } from '../utils/sse.js'
-import { safeFetch, stripHopByHop } from '../utils/safeFetch.js'
+import { safeFetch } from '../utils/safeFetch.js'
 
 const router = Router()
 

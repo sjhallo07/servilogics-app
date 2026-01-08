@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const hasOwnProperty = Object.prototype.hasOwnProperty
 
-function is(x: any, y: any) {
+function is(x: any, y: any)
+{
     if (x === y) {
         return x !== 0 || y !== 0 || 1 / x === 1 / y
     }
-    // eslint-disable-next-line no-self-compare
     return x !== x && y !== y
 }
 
-export default function shallowEqual(objA: any, objB: any) {
+export default function shallowEqual(objA: any, objB: any)
+{
     if (is(objA, objB)) {
         return true
     }

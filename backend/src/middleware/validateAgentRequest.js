@@ -1,4 +1,4 @@
-import { MAX_REQ_BYTES, resolveAllowlist, hostnameMatchesAllowlist } from '../utils/agentPolicy.js'
+import { MAX_REQ_BYTES } from '../utils/agentPolicy.js'
 import { parseAndCheckUrl, filterRequestHeaders } from '../utils/safeFetch.js'
 
 const ALLOWED_METHODS = ['GET', 'POST']

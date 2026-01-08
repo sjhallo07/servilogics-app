@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import {
-    PiPhoneDuotone,
-    PiEnvelopeDuotone,
-    PiStarFill,
-} from 'react-icons/pi'
+import
+    {
+        PiPhoneDuotone,
+        PiEnvelopeDuotone,
+        PiStarFill,
+    } from 'react-icons/pi'
 import { workersData } from '@/data/services.data'
 import Button from '@/components/ui/Button'
 import type { Worker } from '@/@types/services'
@@ -24,9 +25,8 @@ const availabilityLabels: Record<string, string> = {
 
 const WorkerCard = ({ worker, isSelected, onSelect }: { worker: Worker; isSelected: boolean; onSelect: () => void }) => (
     <motion.div
-        className={`bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm cursor-pointer transition-all ${
-            isSelected ? 'ring-2 ring-blue-500' : ''
-        }`}
+        className={`bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm cursor-pointer transition-all ${isSelected ? 'ring-2 ring-blue-500' : ''
+            }`}
         whileHover={{ scale: 1.02 }}
         onClick={onSelect}
     >
@@ -60,10 +60,9 @@ const WorkerCard = ({ worker, isSelected, onSelect }: { worker: Worker; isSelect
             ))}
         </div>
         <div className="mt-3 flex items-center justify-between">
-            <span className={`text-sm font-medium ${
-                worker.availability === 'available' ? 'text-green-600' : 
-                worker.availability === 'busy' ? 'text-yellow-600' : 'text-gray-400'
-            }`}>
+            <span className={`text-sm font-medium ${worker.availability === 'available' ? 'text-green-600' :
+                    worker.availability === 'busy' ? 'text-yellow-600' : 'text-gray-400'
+                }`}>
                 {availabilityLabels[worker.availability]}
             </span>
             {worker.availability !== 'offline' && (
@@ -88,7 +87,8 @@ const WorkerCard = ({ worker, isSelected, onSelect }: { worker: Worker; isSelect
     </motion.div>
 )
 
-const WorkersMap = () => {
+const WorkersMap = () =>
+{
     const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null)
     const [selectedZone, setSelectedZone] = useState<string>('all')
     const mapRef = useRef<HTMLDivElement>(null)
@@ -101,16 +101,18 @@ const WorkersMap = () => {
         (worker) => selectedZone === 'all' || worker.zone === selectedZone
     )
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         // Dynamic import of Leaflet
-        const initMap = async () => {
+        const initMap = async () =>
+        {
             if (!mapRef.current || mapInstance) return
 
             const L = await import('leaflet')
-            
+
             // Initialize map
             const map = L.map(mapRef.current).setView([40.7128, -74.006], 11)
-            
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map)
@@ -120,15 +122,18 @@ const WorkersMap = () => {
 
         initMap()
 
-        return () => {
+        return () =>
+        {
             if (mapInstance) {
                 mapInstance.remove()
             }
         }
     }, [mapInstance])
 
-    useEffect(() => {
-        const updateMarkers = async () => {
+    useEffect(() =>
+    {
+        const updateMarkers = async () =>
+        {
             if (!mapInstance) return
 
             const L = await import('leaflet')
@@ -138,11 +143,12 @@ const WorkersMap = () => {
             markersRef.current = []
 
             // Add new markers
-            filteredWorkers.forEach((worker) => {
+            filteredWorkers.forEach((worker) =>
+            {
                 if (worker.currentLocation) {
-                    const markerColor = worker.availability === 'available' ? '#22c55e' : 
-                                       worker.availability === 'busy' ? '#eab308' : '#9ca3af'
-                    
+                    const markerColor = worker.availability === 'available' ? '#22c55e' :
+                        worker.availability === 'busy' ? '#eab308' : '#9ca3af'
+
                     const customIcon = L.divIcon({
                         className: 'custom-marker',
                         html: `
@@ -203,11 +209,10 @@ const WorkersMap = () => {
             {/* Zone Filter */}
             <div className="mb-6 flex flex-wrap gap-2">
                 <button
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        selectedZone === 'all'
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${selectedZone === 'all'
                             ? 'bg-blue-600 text-white'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                    }`}
+                        }`}
                     onClick={() => setSelectedZone('all')}
                 >
                     All Zones
@@ -215,11 +220,10 @@ const WorkersMap = () => {
                 {zones.map((zone) => (
                     <button
                         key={zone}
-                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                            selectedZone === zone
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${selectedZone === zone
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                        }`}
+                            }`}
                         onClick={() => setSelectedZone(zone)}
                     >
                         {zone}
