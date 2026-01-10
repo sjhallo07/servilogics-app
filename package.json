@@ -13,7 +13,8 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:backend": "npx eslint -c backend/eslint.config.mjs backend/src",
     "lint:all": "npm run lint && npm run lint:backend",
-    "format": "npm run prettier:fix && npm run lint:fix"
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.2",
