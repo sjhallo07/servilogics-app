@@ -2,5 +2,5 @@
   "name": "React TS Devcontainer",
   "image": "mcr.microsoft.com/devcontainers/node:20",
   "postCreateCommand": "true",
-  "customizations": { "vscode": { "extensions": ["ms-vscode.vscode-typescript-next", "esbenp.prettier-vscode"] } }
+  "customizations": { "vscode": { "extensions": ["ms-vscode.vscode-typescript-next", "esbenp.prettier-vscode", "github.copilot", "github.copilot-chat"] } }
 }

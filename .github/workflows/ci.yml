@@ -8,6 +8,7 @@ on:
       - "src/**"
       - "public/**"
       - "package.json"
+      - "package-lock.json"
       - "tsconfig.json"
   pull_request:
     branches: [ main, master ]
@@ -15,6 +16,7 @@ on:
       - "src/**"
       - "public/**"
       - "package.json"
+      - "package-lock.json"
       - "tsconfig.json"
   workflow_dispatch:
 
@@ -35,4 +37,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build --if-present
-      - run: npm test -- --ci --passWithNoTests
+      - run: npm run test --if-present -- --ci --passWithNoTests

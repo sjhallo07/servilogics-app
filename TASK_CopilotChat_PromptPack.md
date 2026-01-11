@@ -1,6 +1,6 @@
 # Copilot Chat – Best Prompts Pack (Editor, CI, Devcontainers, Cost Optimization)
 
-How to use
+How to use:
 - Open Copilot Chat and paste any prompt below.
 - Replace placeholders like <repo>, <path>, <goal>, <limit>.
 - Keep messages short; ask for a plan first, then iterate.
