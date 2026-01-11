@@ -1,21 +1,11 @@
 {
-  "name": "Devcontainer Base",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-  "features": {},
+  "name": "React TS Devcontainer",
+  "image": "mcr.microsoft.com/devcontainers/node:20",
   "postCreateCommand": "true",
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-vscode.vscode-typescript-next",
-        "ms-python.python"
-      ],
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash"
-      }
+      "extensions": ["ms-vscode.vscode-typescript-next", "esbenp.prettier-vscode"],
+      "settings": { "files.autoSave": "onFocusChange", "editor.formatOnSave": true }
     }
-  },
-  "containerUser": "vscode",
-  "updateContentCommand": "",
-  "shutdownAction": "stopContainer",
-  "waitFor": "onCreateCommand"
+  }
 }
