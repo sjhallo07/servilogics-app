@@ -1,127 +1,127 @@
 {
-    "items": [
-        {
-            "id": 1,
-            "name": "Laptop Screen",
-            "sku": "SCREEN-001",
-            "category": "Electronics",
-            "quantity": 15,
-            "unitPrice": 85.50,
-            "supplier": "Tech Supplies Inc",
-            "lastRestocked": "2026-01-10",
-            "reorderLevel": 5,
-            "status": "in-stock"
-        },
-        {
-            "id": 2,
-            "name": "Keyboard",
-            "sku": "KB-002",
-            "category": "Peripherals",
-            "quantity": 32,
-            "unitPrice": 45.00,
-            "supplier": "Peripheral World",
-            "lastRestocked": "2026-01-08",
-            "reorderLevel": 10,
-            "status": "in-stock"
-        },
-        {
-            "id": 3,
-            "name": "Mouse",
-            "sku": "MOUSE-003",
-            "category": "Peripherals",
-            "quantity": 3,
-            "unitPrice": 25.00,
-            "supplier": "Peripheral World",
-            "lastRestocked": "2025-12-20",
-            "reorderLevel": 8,
-            "status": "low-stock"
-        },
-        {
-            "id": 4,
-            "name": "USB-C Cable",
-            "sku": "CABLE-004",
-            "category": "Cables",
-            "quantity": 0,
-            "unitPrice": 12.50,
-            "supplier": "Cable Depot",
-            "lastRestocked": "2025-12-15",
-            "reorderLevel": 15,
-            "status": "out-of-stock"
-        },
-        {
-            "id": 5,
-            "name": "HDMI Cable",
-            "sku": "CABLE-005",
-            "category": "Cables",
-            "quantity": 28,
-            "unitPrice": 8.99,
-            "supplier": "Cable Depot",
-            "lastRestocked": "2026-01-05",
-            "reorderLevel": 10,
-            "status": "in-stock"
-        },
-        {
-            "id": 6,
-            "name": "RAM 8GB DDR4",
-            "sku": "RAM-006",
-            "category": "Computer Parts",
-            "quantity": 12,
-            "unitPrice": 65.00,
-            "supplier": "Memory Pro",
-            "lastRestocked": "2026-01-07",
-            "reorderLevel": 5,
-            "status": "in-stock"
-        },
-        {
-            "id": 7,
-            "name": "SSD 512GB",
-            "sku": "SSD-007",
-            "category": "Storage",
-            "quantity": 8,
-            "unitPrice": 120.00,
-            "supplier": "Storage Solutions",
-            "lastRestocked": "2026-01-06",
-            "reorderLevel": 3,
-            "status": "in-stock"
-        }
-    ],
-    "categories": [
-        "Electronics",
-        "Peripherals",
-        "Cables",
-        "Computer Parts",
-        "Storage"
-    ],
-    "suppliers": [
-        {
-            "id": 1,
-            "name": "Tech Supplies Inc",
-            "contact": "contact@techsupplies.com",
-            "phone": "+1-800-TECH-SUPPLIES"
-        },
-        {
-            "id": 2,
-            "name": "Peripheral World",
-            "contact": "sales@peripheralworld.com",
-            "phone": "+1-800-PERIPHERAL"
-        },
-        {
-            "id": 3,
-            "name": "Cable Depot",
-            "contact": "info@cabledepot.com",
-            "phone": "+1-800-CABLES"
-        },
-        {
-            "id": 4,
-            "name": "Memory Pro",
-            "contact": "support@memorypro.com",
-            "phone": "+1-800-MEMORY"
-        },
-        {
-            "id": 5,
-            "name": "Storage Solutions",
-            "contact": "sales@storagesolutions.com",
-            "phone": "+1-800-STORAGE"
-        }
-    ]
+  "items": [
+    {
+      "id": 1,
+      "name": "Laptop Screen",
+      "sku": "SCREEN-001",
+      "category": "Electronics",
+      "quantity": 15,
+      "unitPrice": 85.5,
+      "supplier": "Tech Supplies Inc",
+      "lastRestocked": "2026-01-10",
+      "reorderLevel": 5,
+      "status": "in-stock"
+    },
+    {
+      "id": 2,
+      "name": "Keyboard",
+      "sku": "KB-002",
+      "category": "Peripherals",
+      "quantity": 32,
+      "unitPrice": 50,
+      "supplier": "New Supplier Corp",
+      "lastRestocked": "2026-01-08",
+      "reorderLevel": 10,
+      "status": "in-stock"
+    },
+    {
+      "id": 3,
+      "name": "Mouse",
+      "sku": "MOUSE-003",
+      "category": "Peripherals",
+      "quantity": 1,
+      "unitPrice": 25,
+      "supplier": "Peripheral World",
+      "lastRestocked": "2025-12-20",
+      "reorderLevel": 8,
+      "status": "low-stock"
+    },
+    {
+      "id": 4,
+      "name": "USB-C Cable",
+      "sku": "CABLE-004",
+      "category": "Cables",
+      "quantity": 0,
+      "unitPrice": 12.5,
+      "supplier": "Cable Depot",
+      "lastRestocked": "2025-12-15",
+      "reorderLevel": 15,
+      "status": "out-of-stock"
+    },
+    {
+      "id": 5,
+      "name": "HDMI Cable",
+      "sku": "CABLE-005",
+      "category": "Cables",
+      "quantity": 28,
+      "unitPrice": 8.99,
+      "supplier": "Cable Depot",
+      "lastRestocked": "2026-01-05",
+      "reorderLevel": 10,
+      "status": "in-stock"
+    },
+    {
+      "id": 6,
+      "name": "RAM 8GB DDR4",
+      "sku": "RAM-006",
+      "category": "Computer Parts",
+      "quantity": 12,
+      "unitPrice": 65,
+      "supplier": "Memory Pro",
+      "lastRestocked": "2026-01-07",
+      "reorderLevel": 5,
+      "status": "in-stock"
+    },
+    {
+      "id": 7,
+      "name": "SSD 512GB",
+      "sku": "SSD-007",
+      "category": "Storage",
+      "quantity": 8,
+      "unitPrice": 120,
+      "supplier": "Storage Solutions",
+      "lastRestocked": "2026-01-06",
+      "reorderLevel": 3,
+      "status": "in-stock"
+    }
+  ],
+  "categories": [
+    "Electronics",
+    "Peripherals",
+    "Cables",
+    "Computer Parts",
+    "Storage"
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "Tech Supplies Inc",
+      "contact": "contact@techsupplies.com",
+      "phone": "+1-800-TECH-SUPPLIES"
+    },
+    {
+      "id": 2,
+      "name": "Peripheral World",
+      "contact": "sales@peripheralworld.com",
+      "phone": "+1-800-PERIPHERAL"
+    },
+    {
+      "id": 3,
+      "name": "Cable Depot",
+      "contact": "info@cabledepot.com",
+      "phone": "+1-800-CABLES"
+    },
+    {
+      "id": 4,
+      "name": "Memory Pro",
+      "contact": "support@memorypro.com",
+      "phone": "+1-800-MEMORY"
+    },
+    {
+      "id": 5,
+      "name": "Storage Solutions",
+      "contact": "sales@storagesolutions.com",
+      "phone": "+1-800-STORAGE"
+    }
+  ]
 }

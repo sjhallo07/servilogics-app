@@ -1,26 +1,97 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import {
-    PiPackageDuotone,
-    PiWarningDuotone,
-    PiMagnifyingGlassDuotone,
-    PiPlusDuotone,
-    PiPencilDuotone,
-    PiTrashDuotone,
-    PiArrowsDownUpDuotone,
-} from 'react-icons/pi'
-import { inventoryData } from '@/data/services.data'
-import { useCurrencyStore } from '@/store/currencyStore'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
+import { useCurrencyStore } from '@/store/currencyStore'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import {
+    PiArrowsDownUpDuotone,
+    PiMagnifyingGlassDuotone,
+    PiPackageDuotone,
+    PiPlusDuotone,
+    PiWarningDuotone
+} from 'react-icons/pi'
+
+interface InventoryItem {
+    id: number
+    name: string
+    sku: string
+    category: string
+    quantity: number
+    unitPrice: number
+    supplier: string
+    lastRestocked: string
+    reorderLevel: number
+    status: 'in-stock' | 'low-stock' | 'out-of-stock'
+}
+
+interface InventorySummary {
+    totalItems: number
+    totalValue: string
+    inStock: number
+    lowStock: number
+    outOfStock: number
+    lastUpdated: string
+}
 
 const Inventory = () => {
+    const [items, setItems] = useState<InventoryItem[]>([])
+    const [summary, setSummary] = useState<InventorySummary | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
-    const [sortField, setSortField] = useState<'name' | 'quantity' | 'price'>('name')
+    const [sortField, setSortField] = useState<'name' | 'quantity' | 'unitPrice'>('name')
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
     const formatPrice = useCurrencyStore((state) => state.formatPrice)
 
-    const filteredInventory = inventoryData
+    // Fetch inventory data from backend
+    useEffect(() => {
+        const fetchInventory = async () => {
+            try {
+                setLoading(true)
+                
+                // Determine API URL - support both localhost and environment variable
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+                
+                const [itemsRes, summaryRes] = await Promise.all([
+                    fetch(`${apiUrl}/api/inventory/items`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }),
+                    fetch(`${apiUrl}/api/inventory/summary`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                ])
+
+                if (!itemsRes.ok || !summaryRes.ok) {
+                    const error1 = await itemsRes.text()
+                    const error2 = await summaryRes.text()
+                    throw new Error(`Failed to fetch inventory data: ${itemsRes.status} ${summaryRes.status}`)
+                }
+
+                const itemsData = await itemsRes.json()
+                const summaryData = await summaryRes.json()
+
+                setItems(itemsData.data || [])
+                setSummary(summaryData.data || null)
+                setError(null)
+            } catch (err) {
+                const errorMsg = err instanceof Error ? err.message : 'Unknown error occurred'
+                setError(errorMsg)
+                console.error('Error fetching inventory:', err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchInventory()
+    }, [])
+
+    const filteredInventory = items
         .filter((item) =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -37,16 +108,38 @@ const Inventory = () => {
             return ((aValue as number) - (bValue as number)) * modifier
         })
 
-    const lowStockItems = inventoryData.filter((item) => item.quantity <= item.minQuantity)
-    const totalValue = inventoryData.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const lowStockItems = items.filter((item) => item.status === 'low-stock' || item.status === 'out-of-stock')
 
-    const handleSort = (field: 'name' | 'quantity' | 'price') => {
+    const handleSort = (field: 'name' | 'quantity' | 'unitPrice') => {
         if (sortField === field) {
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
         } else {
             setSortField(field)
             setSortDirection('asc')
         }
+    }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600 dark:text-gray-400">Loading inventory...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center bg-red-50 dark:bg-red-900/20 rounded-lg p-8">
+                    <p className="text-red-600 dark:text-red-400 font-medium mb-2">Error Loading Inventory</p>
+                    <p className="text-red-500 dark:text-red-300 text-sm">{error}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-4">Make sure the backend API is running on http://localhost:3001</p>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -79,7 +172,7 @@ const Inventory = () => {
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Total Items</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {inventoryData.length}
+                                {summary?.totalItems || 0}
                             </p>
                         </div>
                     </div>
@@ -98,7 +191,7 @@ const Inventory = () => {
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Total Value</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {formatPrice(totalValue)}
+                                ${summary?.totalValue || '0.00'}
                             </p>
                         </div>
                     </div>
@@ -117,7 +210,7 @@ const Inventory = () => {
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Low Stock</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {lowStockItems.length}
+                                {summary?.lowStock || 0}
                             </p>
                         </div>
                     </div>
@@ -134,9 +227,9 @@ const Inventory = () => {
                             <PiPackageDuotone className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Categories</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">In Stock</p>
                             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {new Set(inventoryData.map((i) => i.category)).size}
+                                {summary?.inStock || 0}
                             </p>
                         </div>
                     </div>
@@ -205,16 +298,16 @@ const Inventory = () => {
                                 </th>
                                 <th
                                     className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer"
-                                    onClick={() => handleSort('price')}
+                                    onClick={() => handleSort('unitPrice')}
                                 >
                                     <div className="flex items-center gap-1">
-                                        Price
+                                        Unit Price
                                         <PiArrowsDownUpDuotone className="w-4 h-4" />
                                     </div>
                                 </th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Supplier</th>
                                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Status</th>
-                                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Actions</th>
+                                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Last Restocked</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,7 +330,7 @@ const Inventory = () => {
                                     <td className="py-4 px-4">
                                         <span
                                             className={`font-medium ${
-                                                item.quantity <= item.minQuantity
+                                                item.quantity <= item.reorderLevel
                                                     ? 'text-red-600 dark:text-red-400'
                                                     : 'text-gray-900 dark:text-white'
                                             }`}
@@ -245,18 +338,22 @@ const Inventory = () => {
                                             {item.quantity}
                                         </span>
                                         <span className="text-gray-400 text-sm ml-1">
-                                            / min {item.minQuantity}
+                                            (min {item.reorderLevel})
                                         </span>
                                     </td>
                                     <td className="py-4 px-4 font-medium text-gray-900 dark:text-white">
-                                        {formatPrice(item.price)}
+                                        ${item.unitPrice.toFixed(2)}
                                     </td>
                                     <td className="py-4 px-4 text-gray-600 dark:text-gray-400">
                                         {item.supplier}
                                     </td>
                                     <td className="py-4 px-4">
-                                        {item.quantity <= item.minQuantity ? (
+                                        {item.status === 'out-of-stock' ? (
                                             <span className="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-xs font-medium rounded">
+                                                Out of Stock
+                                            </span>
+                                        ) : item.status === 'low-stock' ? (
+                                            <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 text-xs font-medium rounded">
                                                 Low Stock
                                             </span>
                                         ) : (
@@ -265,15 +362,8 @@ const Inventory = () => {
                                             </span>
                                         )}
                                     </td>
-                                    <td className="py-4 px-4">
-                                        <div className="flex items-center gap-2">
-                                            <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-lg transition-colors">
-                                                <PiPencilDuotone className="w-4 h-4" />
-                                            </button>
-                                            <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition-colors">
-                                                <PiTrashDuotone className="w-4 h-4" />
-                                            </button>
-                                        </div>
+                                    <td className="py-4 px-4 text-gray-600 dark:text-gray-400 text-sm">
+                                        {item.lastRestocked}
                                     </td>
                                 </tr>
                             ))}
