@@ -20,10 +20,11 @@
  * - Twilio for SMS notifications
  */
 
-import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import express from 'express'
 import agentRouter from './routes/agent.js'
+import inventoryRouter from './routes/inventory.js'
 
 dotenv.config()
 
@@ -34,6 +35,7 @@ const PORT = process.env.PORT || 3001
 app.use(cors())
 app.use(express.json({ limit: '1mb' }))
 app.use('/api', agentRouter)
+app.use('/api/inventory', inventoryRouter)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -58,9 +60,7 @@ app.post('/api/quotes', (req, res) => {
     res.json({ message: 'Quote creation endpoint - Coming soon' })
 })
 
-app.get('/api/inventory', (req, res) => {
-    res.json({ message: 'Inventory endpoint - Coming soon' })
-})
+// Inventory routes are handled by inventoryRouter (see above)
 
 // Start server (skip when running tests)
 if (process.env.NODE_ENV !== 'test') {
