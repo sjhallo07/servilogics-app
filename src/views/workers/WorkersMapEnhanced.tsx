@@ -1,3 +1,4 @@
+import type { Worker as WorkerProfile } from '@/@types/services'
 import Button from '@/components/ui/Button'
 import WorkerService from '@/services/WorkerService'
 import { filterWorkersByRole, useRBAC, type UserRole } from '@/utils/rbac'
@@ -31,7 +32,7 @@ const WorkerCard = ({
     onPhotoUpload,
     canUploadPhoto,
 }: {
-    worker: any
+    worker: WorkerProfile
     isSelected: boolean
     onSelect: () => void
     onPhotoUpload?: (workerId: string) => void
@@ -139,10 +140,10 @@ const WorkerCard = ({
 )
 
 const WorkersMap = () => {
-    const { role, permissions, isAdmin, isStaff } = useRBAC()
-    const [workers, setWorkers] = useState<any[]>([])
-    const [filteredWorkers, setFilteredWorkers] = useState<any[]>([])
-    const [selectedWorker, setSelectedWorker] = useState<any | null>(null)
+    const { role, isAdmin } = useRBAC()
+    const [workers, setWorkers] = useState<WorkerProfile[]>([])
+    const [filteredWorkers, setFilteredWorkers] = useState<WorkerProfile[]>([])
+    const [selectedWorker, setSelectedWorker] = useState<WorkerProfile | null>(null)
     const [selectedZone, setSelectedZone] = useState<string>('all')
     const [zones, setZones] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
@@ -155,6 +156,8 @@ const WorkersMap = () => {
     const userMarkerRef = useRef<Marker | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [uploadingWorker, setUploadingWorker] = useState<string | null>(null)
+
+    const certificationCount = selectedWorker?.certifications?.length ?? 0
 
     // Fetch workers on mount
     useEffect(() => {
@@ -371,10 +374,11 @@ const WorkersMap = () => {
                     )
                 )
                 if (selectedWorker?.id === workerId) {
-                    setSelectedWorker((prev) => ({
-                        ...prev,
-                        photo: response.data.photo,
-                    }))
+                    setSelectedWorker((prev) =>
+                        prev
+                            ? { ...prev, photo: response.data.photo }
+                            : prev
+                    )
                 }
             }
         } catch (err) {
@@ -635,17 +639,13 @@ const WorkersMap = () => {
                                         {selectedWorker.experience} years
                                     </p>
                                 </div>
-                                {selectedWorker.certifications?.length >
-                                    0 && (
+                                {certificationCount > 0 && (
                                     <div>
                                         <p className="text-xs text-gray-500">
                                             Certifications
                                         </p>
                                         <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                                            {
-                                                selectedWorker.certifications
-                                                    .length
-                                            }
+                                            {certificationCount}
                                         </p>
                                     </div>
                                 )}

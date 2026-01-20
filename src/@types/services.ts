@@ -47,21 +47,30 @@ export interface QuoteRequest {
     quotedPrice?: number
 }
 
+export type WorkerAvailability = 'available' | 'busy' | 'offline'
+export type WorkerRole = 'admin' | 'staff' | 'client'
+
 export interface Worker {
     id: string
     name: string
-    avatar: string
+    avatar?: string
     specialties: ServiceCategory[]
-    rating: number
-    reviewCount: number
-    availability: 'available' | 'busy' | 'offline'
+    rating?: number
+    reviewCount?: number
+    availability: WorkerAvailability
     currentLocation?: {
         lat: number
         lng: number
     }
     zone: string
-    phone: string
-    email: string
+    phone?: string
+    email?: string
+    skills?: string[]
+    experience?: number
+    certifications?: string[]
+    photo?: string
+    role?: WorkerRole
+    status?: string
 }
 
 export interface Feedback {

@@ -22,16 +22,16 @@ function HealthStatus({ intervalMs = 30000, className = '' }: Props) {
     return (
         <div className={`flex items-center gap-3 text-sm ${className}`}>
             <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 font-medium ${badgeStyles[styleKey]}`}>
-                <span className="h-2 w-2 rounded-full bg-current opacity-70" aria-hidden />
+                <span aria-hidden className="h-2 w-2 rounded-full bg-current opacity-70" />
                 {label}
             </span>
             {info?.message && <span className="text-slate-600">{info.message}</span>}
             {error && <span className="text-rose-600">{error}</span>}
             <button
                 type="button"
-                onClick={retry}
                 className="rounded border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                 disabled={loading}
+                onClick={retry}
             >
                 {loading ? 'Retrying…' : 'Retry'}
             </button>

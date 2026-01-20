@@ -1,3 +1,4 @@
+import type { Worker } from '@/@types/services'
 import Button from '@/components/ui/Button'
 import WorkerService from '@/services/WorkerService'
 import { useRBAC } from '@/utils/rbac'
@@ -13,10 +14,10 @@ import {
 
 const WorkerManagement = () => {
     const { role } = useRBAC()
-    const [workers, setWorkers] = useState<any[]>([])
+    const [workers, setWorkers] = useState<Worker[]>([])
     const [loading, setLoading] = useState(false)
-    const [editingWorker, setEditingWorker] = useState<any | null>(null)
-    const [formData, setFormData] = useState<any>({
+    const [editingWorker, setEditingWorker] = useState<Worker | null>(null)
+    const [formData, setFormData] = useState<Partial<Worker>>({
         name: '',
         phone: '',
         email: '',
@@ -62,7 +63,7 @@ const WorkerManagement = () => {
         setShowForm(true)
     }
 
-    const handleEditWorker = (worker: any) => {
+    const handleEditWorker = (worker: Worker) => {
         setEditingWorker(worker)
         setFormData(worker)
         setShowForm(true)
@@ -115,7 +116,7 @@ const WorkerManagement = () => {
 
     const handleAvailabilityChange = async (
         workerId: string,
-        currentStatus: string
+        currentStatus: Worker['availability']
     ) => {
         const newStatus =
             currentStatus === 'available'

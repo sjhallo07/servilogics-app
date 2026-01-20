@@ -1,6 +1,7 @@
 /**
  * Role-Based Access Control (RBAC) utilities
  */
+import type { Worker } from '@/@types/services'
 
 export type UserRole = 'admin' | 'staff' | 'client'
 
@@ -144,10 +145,10 @@ export const useRBAC = () => {
 /**
  * Filter workers based on user role
  */
-export const filterWorkersByRole = (workers: any[], role: UserRole): any[] => {
+export const filterWorkersByRole = (workers: Worker[], role: UserRole): Worker[] => {
     if (role === 'client') {
         // Clients only see available and busy workers
-        return workers.filter(w => w.availability !== 'offline')
+        return workers.filter((w) => w.availability !== 'offline')
     }
     // Staff and admin see all workers
     return workers

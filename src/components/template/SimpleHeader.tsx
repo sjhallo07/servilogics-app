@@ -6,8 +6,8 @@ const SimpleHeader = () =>
 {
     return (
         <Header
-            className="shadow-sm dark:shadow-2xl"
             container
+            className="shadow-sm dark:shadow-2xl"
             headerStart={<HeaderLogo />}
             headerMiddle={
                 <div className="text-base md:text-lg font-semibold truncate">

@@ -1,6 +1,5 @@
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
-import { useCurrencyStore } from '@/store/currencyStore'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import {
@@ -41,7 +40,6 @@ const Inventory = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [sortField, setSortField] = useState<'name' | 'quantity' | 'unitPrice'>('name')
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
-    const formatPrice = useCurrencyStore((state) => state.formatPrice)
 
     // Fetch inventory data from backend
     useEffect(() => {
@@ -65,9 +63,13 @@ const Inventory = () => {
                 ])
 
                 if (!itemsRes.ok || !summaryRes.ok) {
-                    const error1 = await itemsRes.text()
-                    const error2 = await summaryRes.text()
-                    throw new Error(`Failed to fetch inventory data: ${itemsRes.status} ${summaryRes.status}`)
+                    const [itemsError, summaryError] = await Promise.all([
+                        itemsRes.text(),
+                        summaryRes.text(),
+                    ])
+                    throw new Error(
+                        `Failed to fetch inventory data: ${itemsRes.status} (${itemsError}) / ${summaryRes.status} (${summaryError})`
+                    )
                 }
 
                 const itemsData = await itemsRes.json()
