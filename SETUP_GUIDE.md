@@ -45,16 +45,19 @@ cp backend/.env.example backend/.env
 Before running the setup script, ensure you have:
 
 ### Required
+
 - ✅ **Node.js** 18+ ([download](https://nodejs.org/))
 - ✅ **npm** 8+ (comes with Node.js)
 - ✅ **Git** ([download](https://git-scm.com/))
 
 ### Recommended
+
 - ⭐ **VS Code** ([download](https://code.visualstudio.com/))
 - ⭐ **GitHub Copilot Extension**
 - ⭐ **Docker** (for PostgreSQL)
 
 ### Optional
+
 - 🔷 **Google Maps API Key** (for Google Maps integration)
 - 🔷 **Mapbox Token** (for Mapbox integration)
 
@@ -63,25 +66,31 @@ Before running the setup script, ensure you have:
 ## 📊 What the Setup Script Does
 
 ### 1. Checks Prerequisites
+
 Verifies Node.js, npm, Git, and optional tools
 
 ### 2. Installs Dependencies
+
 - Frontend: React, Tailwind, Leaflet, Framer Motion
 - Backend: Express, Multer, CORS
 - Dev tools: Nodemon, Concurrently
 
 ### 3. Configures Environment
+
 Creates `.env` files with:
+
 - API ports (Frontend: 5175, Backend: 3001)
 - Map provider (Leaflet by default)
 - Feature flags
 
 ### 4. Sets Up GitHub Copilot
+
 - Creates `.copilot-config.json`
 - Generates `.copilot-prompts.md` with task templates
 - Provides VS Code integration guide
 
 ### 5. Creates Utility Scripts
+
 - `start-dev.sh` - Start all services
 - `stop-dev.sh` - Stop all services
 - `test-maps.sh` - Test map functionality
@@ -92,15 +101,18 @@ Creates `.env` files with:
 ## 🚀 Starting Development
 
 ### Start All Services
+
 ```bash
 ./start-dev.sh
 ```
 
 Services will start on:
-- **Frontend:** http://localhost:5175
-- **Backend:** http://localhost:3001/api
+
+- **Frontend:** <http://localhost:5175>
+- **Backend:** <http://localhost:3001/api>
 
 ### Available Dashboards
+
 ```
 Admin Dashboard:    http://localhost:5175/admin/workers-map
 Staff Dashboard:    http://localhost:5175/staff/workers
@@ -109,6 +121,7 @@ Backend API:        http://localhost:3001/api
 ```
 
 ### Stop Services
+
 ```bash
 ./stop-dev.sh
 ```
@@ -120,11 +133,13 @@ Or press `Ctrl+C` in the terminal running `start-dev.sh`
 ## 🗺️ Map Configuration
 
 ### Current Setup: Leaflet (Default)
+
 - ✅ Free, open-source
 - ✅ No API key needed
 - ✅ Works with OpenStreetMap
 
 **Configuration:**
+
 ```env
 VITE_MAP_PROVIDER=leaflet
 ```
@@ -132,6 +147,7 @@ VITE_MAP_PROVIDER=leaflet
 ### Switch to Google Maps
 
 **Step 1: Get API Key**
+
 ```bash
 1. Go to https://console.cloud.google.com
 2. Create a new project
@@ -140,6 +156,7 @@ VITE_MAP_PROVIDER=leaflet
 ```
 
 **Step 2: Update .env**
+
 ```env
 VITE_MAP_PROVIDER=google
 VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
@@ -148,12 +165,14 @@ VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
 ### Switch to Mapbox
 
 **Step 1: Get Access Token**
+
 ```bash
 1. Go to https://mapbox.com
 2. Create account and get token
 ```
 
 **Step 2: Update .env**
+
 ```env
 VITE_MAP_PROVIDER=mapbox
 VITE_MAPBOX_ACCESS_TOKEN=your_token_here
@@ -166,17 +185,20 @@ VITE_MAPBOX_ACCESS_TOKEN=your_token_here
 ### Setup in VS Code
 
 **Step 1: Install Extension**
+
 1. Open VS Code
 2. Go to Extensions (Cmd+Shift+X)
 3. Search for "GitHub Copilot"
 4. Install official extension by GitHub
 
 **Step 2: Authenticate**
+
 1. Press Cmd+Shift+P
 2. Type "Copilot: Sign In"
 3. Authorize in browser
 
 **Step 3: Use Copilot**
+
 - **Inline suggestions:** Start typing, suggestions appear
 - **Quick fix:** Cmd+I in editor
 - **Chat:** Cmd+Shift+I (if Copilot Chat installed)
@@ -206,6 +228,7 @@ Access prompts in `.copilot-prompts.md`
 ```
 
 Run helper script:
+
 ```bash
 ./copilot-helper.sh prompts
 ./copilot-helper.sh setup
@@ -218,11 +241,13 @@ Run helper script:
 ## 🧪 Testing
 
 ### Test Maps
+
 ```bash
 ./test-maps.sh
 ```
 
 Tests:
+
 - ✅ Workers API endpoint
 - ✅ Zones API endpoint
 - ✅ Frontend server
@@ -232,20 +257,24 @@ Tests:
 ### Manual Testing
 
 **Step 1: Open Client Dashboard**
+
 ```
 http://localhost:5175/find-workers
 ```
 
 **Step 2: Allow Geolocation**
+
 - Browser will prompt for location access
 - Click "Allow"
 
 **Step 3: Verify Map Loads**
+
 - Map should center on your location
 - Worker markers visible
 - "You" marker shows your position
 
 **Step 4: Test Features**
+
 - Filter by zone
 - Click on workers
 - Test call/email buttons
@@ -349,6 +378,7 @@ JWT_SECRET=dev_secret_key
 **Problem:** `EADDRINUSE: address already in use :::3001`
 
 **Solution:**
+
 ```bash
 # Kill process on port
 lsof -ti:3001 | xargs kill -9
@@ -362,6 +392,7 @@ API_PORT=3002
 **Problem:** Blank map or no markers
 
 **Solutions:**
+
 1. Check browser console for errors (F12)
 2. Verify backend is running
 3. Check `VITE_API_URL` in `.env`
@@ -373,6 +404,7 @@ API_PORT=3002
 **Problem:** "Unable to access your location"
 
 **Solutions:**
+
 1. Check browser settings → Location
 2. Grant permission when prompted
 3. Check browser DevTools Sensors (simulate location)
@@ -383,6 +415,7 @@ API_PORT=3002
 **Problem:** "Only staff and admins can..." error
 
 **Solutions:**
+
 1. Check user role in localStorage
 2. Verify `role` and `userId` query params
 3. Check RBAC in `src/utils/rbac.ts`
@@ -393,6 +426,7 @@ API_PORT=3002
 **Problem:** npm install error
 
 **Solutions:**
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -421,6 +455,7 @@ npm install
 ## 🚀 Development Workflow
 
 ### 1. Make Changes
+
 ```bash
 # Edit component
 vim src/views/workers/WorkersMapEnhanced.tsx
@@ -430,15 +465,18 @@ code .
 ```
 
 ### 2. Test Immediately
+
 - Changes auto-reload in browser
 - Check console for errors
 
 ### 3. Use Copilot
+
 - Press Cmd+I for suggestions
 - Use prompts from `.copilot-prompts.md`
 - Ask for refactoring help
 
 ### 4. Commit Changes
+
 ```bash
 git add .
 git commit -m "Describe changes"
@@ -450,21 +488,25 @@ git push origin main
 ## 🎓 Learning Resources
 
 ### Maps
+
 - [Leaflet Docs](https://leafletjs.com/)
 - [React-Leaflet](https://react-leaflet.js.org/)
 - [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation)
 
 ### Frontend
+
 - [React Docs](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 
 ### Backend
+
 - [Express.js](https://expressjs.com/)
 - [Node.js](https://nodejs.org/)
 - [REST API Design](https://restfulapi.net/)
 
 ### Copilot
+
 - [Copilot Docs](https://github.com/features/copilot)
 - [Copilot Chat](https://github.com/github-copilot/chat_waitlist)
 
@@ -473,12 +515,14 @@ git push origin main
 ## 💡 Tips & Tricks
 
 ### Use Copilot for Code Generation
+
 ```bash
 # In VS Code, press Cmd+I and paste:
 "Create a React hook for geolocation with error handling"
 ```
 
 ### Watch Files for Changes
+
 ```bash
 # Frontend changes auto-reload (Vite)
 # Backend requires restart after changes
@@ -488,6 +532,7 @@ npm run dev:backend  # With nodemon
 ```
 
 ### Debug in Browser
+
 ```
 F12 → Console tab
 - Check for errors
@@ -497,6 +542,7 @@ F12 → Console tab
 ```
 
 ### Fast Database Reset
+
 ```bash
 ./db-utils.sh reset
 ```
@@ -525,12 +571,14 @@ Before starting development:
 ## 🆘 Get Help
 
 ### Check Documentation
+
 1. Specific issue? Check MAPS_DASHBOARD_GUIDE.md
 2. API question? Check MAP_DATA_IMPLEMENTATION.md
 3. Integration help? Check INTEGRATION_GUIDE.md
 4. Code generation? Check .copilot-prompts.md
 
 ### Debug Steps
+
 1. Check browser console (F12)
 2. Check backend logs: `tail -f /tmp/backend.log`
 3. Test API with curl: `curl http://localhost:3001/api/workers`

@@ -1,16 +1,258 @@
-import { useState } from 'react'
+import { workersData } from '@/data/services.data'
 import { motion } from 'framer-motion'
+import type { Map as LeafletMap, Marker } from 'leaflet'
+import { useEffect, useRef, useState } from 'react'
 import {
-    PiUsersDuotone,
-    PiClipboardTextDuotone,
-    PiCurrencyDollarDuotone,
-    PiTrendUpDuotone,
-    PiMapPinDuotone,
     PiCheckCircleDuotone,
+    PiClipboardTextDuotone,
     PiClockDuotone,
+    PiCurrencyDollarDuotone,
+    PiMapPinDuotone,
+    PiTrendUpDuotone,
+    PiUsersDuotone,
     PiWarningDuotone,
 } from 'react-icons/pi'
-import { workersData } from '@/data/services.data'
+
+const AdminWorkersMap = () => {
+    const mapRef = useRef<HTMLDivElement>(null)
+    const mapInstanceRef = useRef<LeafletMap | null>(null)
+    const markersRef = useRef<Marker[]>([])
+    const userMarkerRef = useRef<Marker | null>(null)
+    const geoWatchIdRef = useRef<number | null>(null)
+    const hasCenteredOnUserRef = useRef(false)
+    const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+    const [locationError, setLocationError] = useState<string | null>(null)
+
+    useEffect(() => {
+        const initMap = async () => {
+            if (!mapRef.current || mapInstanceRef.current) return
+            const L = await import('leaflet')
+
+            const map = L.map(mapRef.current).setView([40.7128, -74.006], 11)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+            }).addTo(map)
+
+            mapInstanceRef.current = map
+        }
+
+        initMap()
+
+        return () => {
+            markersRef.current.forEach((marker) => marker.remove())
+            markersRef.current = []
+            if (mapInstanceRef.current) {
+                mapInstanceRef.current.remove()
+                mapInstanceRef.current = null
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        const renderMarkers = async () => {
+            if (!mapInstanceRef.current) return
+            const L = await import('leaflet')
+
+            markersRef.current.forEach((marker) => marker.remove())
+            markersRef.current = []
+
+            if (userMarkerRef.current) {
+                userMarkerRef.current.remove()
+                userMarkerRef.current = null
+            }
+
+            workersData.forEach((worker) => {
+                if (!worker.currentLocation) return
+
+                const markerColor =
+                    worker.availability === 'available'
+                        ? '#22c55e'
+                        : worker.availability === 'busy'
+                        ? '#eab308'
+                        : '#9ca3af'
+
+                const initials = worker.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+
+                const customIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `
+                        <div style="
+                            width: 34px;
+                            height: 34px;
+                            background: ${markerColor};
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            font-weight: 700;
+                            font-size: 12px;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+                        ">
+                            ${initials}
+                        </div>
+                    `,
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 17],
+                })
+
+                const marker = L.marker(
+                    [worker.currentLocation.lat, worker.currentLocation.lng],
+                    { icon: customIcon }
+                ).addTo(mapInstanceRef.current)
+
+                marker.bindPopup(`
+                    <div style="padding: 8px; min-width: 150px;">
+                        <strong>${worker.name}</strong><br/>
+                        <span style="color: #666;">${worker.zone}</span><br/>
+                        <span style="color: ${markerColor};">● ${worker.availability}</span>
+                    </div>
+                `)
+
+                markersRef.current.push(marker)
+            })
+
+            if (userLocation) {
+                const userIcon = L.divIcon({
+                    className: 'user-marker',
+                    html: `
+                        <div style="
+                            width: 32px;
+                            height: 32px;
+                            background: #2563eb;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            font-weight: bold;
+                            font-size: 12px;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                        ">Admin</div>
+                    `,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                })
+
+                const marker = L.marker(
+                    [userLocation.lat, userLocation.lng],
+                    { icon: userIcon }
+                ).addTo(mapInstanceRef.current)
+
+                marker.bindPopup('<strong>Your location</strong>')
+                userMarkerRef.current = marker
+            }
+        }
+
+        renderMarkers()
+    }, [userLocation])
+
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation not supported in this browser.')
+            return
+        }
+
+        geoWatchIdRef.current = navigator.geolocation.watchPosition(
+            (pos) => {
+                const { latitude, longitude } = pos.coords
+                setUserLocation({ lat: latitude, lng: longitude })
+
+                if (mapInstanceRef.current && !hasCenteredOnUserRef.current) {
+                    mapInstanceRef.current.setView([latitude, longitude], 13)
+                    hasCenteredOnUserRef.current = true
+                }
+            },
+            (err) => {
+                console.warn('Geolocation denied or unavailable', err)
+                setLocationError('Unable to access your location. Using default view.')
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        )
+
+        return () => {
+            if (geoWatchIdRef.current !== null) {
+                navigator.geolocation.clearWatch(geoWatchIdRef.current)
+            }
+        }
+    }, [])
+
+    const handleLocateMe = () => {
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation not supported in this browser.')
+            return
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const { latitude, longitude } = pos.coords
+                setUserLocation({ lat: latitude, lng: longitude })
+                if (mapInstanceRef.current) {
+                    mapInstanceRef.current.setView([latitude, longitude], 13)
+                }
+            },
+            (err) => {
+                console.warn('Geolocation denied or unavailable', err)
+                setLocationError('Unable to access your location. Using default view.')
+            },
+            { enableHighAccuracy: true, timeout: 8000 }
+        )
+    }
+
+    return (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+                <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Worker Locations
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Live view of worker positions by availability
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={handleLocateMe}
+                        className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
+                    >
+                        Locate me
+                    </button>
+                </div>
+            </div>
+            <div
+                ref={mapRef}
+                className="w-full h-[360px] rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
+            />
+            <div className="mt-2 text-sm text-amber-600 dark:text-amber-400 min-h-[20px]">
+                {locationError}
+            </div>
+            <div className="mt-2 flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-green-500" />
+                    <span className="text-gray-600 dark:text-gray-400">Available</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                    <span className="text-gray-600 dark:text-gray-400">Busy</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-gray-400" />
+                    <span className="text-gray-600 dark:text-gray-400">Offline</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-blue-600" />
+                    <span className="text-gray-600 dark:text-gray-400">Admin (you)</span>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 const StatCard = ({
     title,
@@ -301,6 +543,10 @@ const AdminDashboard = () => {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    <div className="mt-8">
+                        <AdminWorkersMap />
                     </div>
                 </div>
             )}

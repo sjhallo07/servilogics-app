@@ -5,13 +5,12 @@ import { filterWorkersByRole, useRBAC, type UserRole } from '@/utils/rbac'
 import { motion } from 'framer-motion'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
-import
-    {
-        PiEnvelopeDuotone,
-        PiImageSquareDuotone,
-        PiPhoneDuotone,
-        PiStarFill
-    } from 'react-icons/pi'
+import {
+    PiEnvelopeDuotone,
+    PiImageSquareDuotone,
+    PiPhoneDuotone,
+    PiStarFill
+} from 'react-icons/pi'
 
 const availabilityColors: Record<string, string> = {
     available: 'bg-green-500',
@@ -151,7 +150,9 @@ const WorkersMap = () => {
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
     const [locationError, setLocationError] = useState<string | null>(null)
     const mapRef = useRef<HTMLDivElement>(null)
-    const [mapInstance, setMapInstance] = useState<LeafletMap | null>(null)
+    const mapInstanceRef = useRef<LeafletMap | null>(null)
+    const geoWatchIdRef = useRef<number | null>(null)
+    const hasCenteredOnUserRef = useRef(false)
     const markersRef = useRef<Marker[]>([])
     const userMarkerRef = useRef<Marker | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -199,7 +200,7 @@ const WorkersMap = () => {
     // Initialize map
     useEffect(() => {
         const initMap = async () => {
-            if (!mapRef.current || mapInstance) return
+            if (!mapRef.current || mapInstanceRef.current) return
 
             const L = await import('leaflet')
 
@@ -212,40 +213,77 @@ const WorkersMap = () => {
                 }
             ).addTo(map)
 
-            // Try to center on user's real location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        const { latitude, longitude } = pos.coords
-                        setUserLocation({ lat: latitude, lng: longitude })
-                        map.setView([latitude, longitude], 13)
-                    },
-                    (err) => {
-                        console.warn('Geolocation denied or unavailable', err)
-                        setLocationError('Unable to access your location. Using default view.')
-                    },
-                    { enableHighAccuracy: true, timeout: 7000 }
-                )
-            } else {
-                setLocationError('Geolocation not supported in this browser.')
-            }
-
-            setMapInstance(map)
+            mapInstanceRef.current = map
         }
 
         initMap()
 
         return () => {
-            if (mapInstance) {
-                mapInstance.remove()
+            if (mapInstanceRef.current) {
+                mapInstanceRef.current.remove()
+                mapInstanceRef.current = null
             }
         }
-    }, [mapInstance])
+    }, [])
+
+    // Live geolocation watcher to reflect real device location
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation not supported in this browser.')
+            return
+        }
+
+        geoWatchIdRef.current = navigator.geolocation.watchPosition(
+            (pos) => {
+                const { latitude, longitude } = pos.coords
+                setUserLocation({ lat: latitude, lng: longitude })
+
+                // Center map once when we first get a fix
+                if (mapInstanceRef.current && !hasCenteredOnUserRef.current) {
+                    mapInstanceRef.current.setView([latitude, longitude], 13)
+                    hasCenteredOnUserRef.current = true
+                }
+            },
+            (err) => {
+                console.warn('Geolocation denied or unavailable', err)
+                setLocationError('Unable to access your location. Using default view.')
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        )
+
+        return () => {
+            if (geoWatchIdRef.current !== null) {
+                navigator.geolocation.clearWatch(geoWatchIdRef.current)
+            }
+        }
+    }, [])
+
+    const handleLocateMe = () => {
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation not supported in this browser.')
+            return
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const { latitude, longitude } = pos.coords
+                setUserLocation({ lat: latitude, lng: longitude })
+                if (mapInstanceRef.current) {
+                    mapInstanceRef.current.setView([latitude, longitude], 13)
+                }
+            },
+            (err) => {
+                console.warn('Geolocation denied or unavailable', err)
+                setLocationError('Unable to access your location. Using default view.')
+            },
+            { enableHighAccuracy: true, timeout: 8000 }
+        )
+    }
 
     // Update markers
     useEffect(() => {
         const updateMarkers = async () => {
-            if (!mapInstance) return
+            if (!mapInstanceRef.current) return
 
             const L = await import('leaflet')
 
@@ -302,7 +340,7 @@ const WorkersMap = () => {
                             worker.currentLocation.lng,
                         ],
                         { icon: customIcon }
-                    ).addTo(mapInstance)
+                    ).addTo(mapInstanceRef.current)
 
                     marker.bindPopup(`
                         <div style="padding: 8px; min-width: 150px;">
@@ -343,7 +381,7 @@ const WorkersMap = () => {
 
                 const marker = L.marker([userLocation.lat, userLocation.lng], {
                     icon: userIcon,
-                }).addTo(mapInstance)
+                }).addTo(mapInstanceRef.current)
 
                 marker.bindPopup('<strong>Your location</strong>')
                 userMarkerRef.current = marker
@@ -351,7 +389,7 @@ const WorkersMap = () => {
         }
 
         updateMarkers()
-    }, [mapInstance, filteredWorkers, userLocation])
+    }, [filteredWorkers, userLocation])
 
     // Handle photo upload
     const handlePhotoUpload = async (
@@ -464,6 +502,20 @@ const WorkersMap = () => {
                         ref={mapRef}
                         className="w-full h-[500px] rounded-xl overflow-hidden shadow-sm bg-gray-200 dark:bg-gray-700"
                     />
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                        <button
+                            type="button"
+                            onClick={handleLocateMe}
+                            className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
+                        >
+                            Use my current location
+                        </button>
+                        {locationError && (
+                            <span className="text-amber-600 dark:text-amber-400 text-sm">
+                                {locationError}
+                            </span>
+                        )}
+                    </div>
                     <div className="mt-4 flex items-center gap-6 text-sm">
                         <div className="flex items-center gap-2">
                             <span className="w-3 h-3 rounded-full bg-green-500" />

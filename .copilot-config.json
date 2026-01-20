@@ -1,0 +1,27 @@
+{
+  "project": "Ecme-lite-cesar",
+  "context": {
+    "framework": "React + Node.js + Express",
+    "features": [
+      "Real-time worker tracking",
+      "Interactive maps with Leaflet/Google Maps",
+      "Role-based dashboards (Admin, Staff, Client)",
+      "Geolocation services",
+      "Worker management",
+      "Photo uploads",
+      "Inventory management"
+    ],
+    "filePatterns": {
+      "components": "src/components/**/*.{tsx,jsx}",
+      "pages": "src/views/**/*.{tsx,jsx}",
+      "api": "backend/src/routes/**/*.{js,ts}",
+      "maps": "**/*map*.{tsx,jsx}",
+      "services": "src/services/**/*.{ts,tsx}"
+    }
+  },
+  "preferences": {
+    "codeStyle": "typescript",
+    "testing": "jest",
+    "documentation": "jsdoc"
+  }
+}
