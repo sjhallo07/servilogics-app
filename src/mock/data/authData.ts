@@ -1,5 +1,14 @@
 export const signInUserData = [
     {
+        userId: '11',
+        avatar: '',
+        userName: 'Super Admin',
+        email: 'superadmin@ecme.com',
+        authority: ['superadmin', 'admin', 'user'],
+        password: 'SuperAdmin123',
+        accountUserName: 'superadmin',
+    },
+    {
         userId: '21',
         avatar: '',
         userName: 'John Doe',
