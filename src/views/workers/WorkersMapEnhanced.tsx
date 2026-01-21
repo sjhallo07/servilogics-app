@@ -505,8 +505,8 @@ const WorkersMap = () => {
                     <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
                         <button
                             type="button"
-                            onClick={handleLocateMe}
                             className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
+                            onClick={handleLocateMe}
                         >
                             Use my current location
                         </button>
