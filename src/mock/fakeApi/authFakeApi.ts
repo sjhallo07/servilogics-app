@@ -4,6 +4,7 @@ import { signInUserData } from '../data/authData'
 const TOKEN = 'wVYrxaeNa9OxdnULvde1Au5m5w63'
 
 const sanitizeUser = (user: typeof signInUserData[number]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...safeUser } = user
     return safeUser
 }
@@ -14,10 +15,10 @@ mock.onPost(`/sign-in`).reply((config) => {
         password: string
     }
 
-    const { email, password } = data
+    const { email, password: pwd } = data
 
     const user = signInUserData.find(
-        (candidate) => candidate.email === email && candidate.password === password,
+        (candidate) => candidate.email === email && candidate.password === pwd,
     )
 
     if (user) {
