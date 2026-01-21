@@ -5,12 +5,13 @@ import { filterWorkersByRole, useRBAC, type UserRole } from '@/utils/rbac'
 import { motion } from 'framer-motion'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
-import {
-    PiEnvelopeDuotone,
-    PiImageSquareDuotone,
-    PiPhoneDuotone,
-    PiStarFill
-} from 'react-icons/pi'
+import
+    {
+        PiEnvelopeDuotone,
+        PiImageSquareDuotone,
+        PiPhoneDuotone,
+        PiStarFill
+    } from 'react-icons/pi'
 
 const availabilityColors: Record<string, string> = {
     available: 'bg-green-500',
@@ -335,12 +336,9 @@ const WorkersMap = () => {
                     })
 
                     const marker = L.marker(
-                        [
-                            worker.currentLocation.lat,
-                            worker.currentLocation.lng,
-                        ],
+                        [worker.currentLocation.lat, worker.currentLocation.lng],
                         { icon: customIcon }
-                    ).addTo(mapInstanceRef.current)
+                    ).addTo(mapInstanceRef.current!)
 
                     marker.bindPopup(`
                         <div style="padding: 8px; min-width: 150px;">
@@ -381,7 +379,7 @@ const WorkersMap = () => {
 
                 const marker = L.marker([userLocation.lat, userLocation.lng], {
                     icon: userIcon,
-                }).addTo(mapInstanceRef.current)
+                }).addTo(mapInstanceRef.current!)
 
                 marker.bindPopup('<strong>Your location</strong>')
                 userMarkerRef.current = marker

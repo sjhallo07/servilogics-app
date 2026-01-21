@@ -2,16 +2,17 @@ import { workersData } from '@/data/services.data'
 import { motion } from 'framer-motion'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
-import {
-    PiCheckCircleDuotone,
-    PiClipboardTextDuotone,
-    PiClockDuotone,
-    PiCurrencyDollarDuotone,
-    PiMapPinDuotone,
-    PiTrendUpDuotone,
-    PiUsersDuotone,
-    PiWarningDuotone,
-} from 'react-icons/pi'
+import
+    {
+        PiCheckCircleDuotone,
+        PiClipboardTextDuotone,
+        PiClockDuotone,
+        PiCurrencyDollarDuotone,
+        PiMapPinDuotone,
+        PiTrendUpDuotone,
+        PiUsersDuotone,
+        PiWarningDuotone,
+    } from 'react-icons/pi'
 
 const AdminWorkersMap = () => {
     const mapRef = useRef<HTMLDivElement>(null)
@@ -103,7 +104,7 @@ const AdminWorkersMap = () => {
                 const marker = L.marker(
                     [worker.currentLocation.lat, worker.currentLocation.lng],
                     { icon: customIcon }
-                ).addTo(mapInstanceRef.current)
+                ).addTo(mapInstanceRef.current!)
 
                 marker.bindPopup(`
                     <div style="padding: 8px; min-width: 150px;">
@@ -142,7 +143,7 @@ const AdminWorkersMap = () => {
                 const marker = L.marker(
                     [userLocation.lat, userLocation.lng],
                     { icon: userIcon }
-                ).addTo(mapInstanceRef.current)
+                ).addTo(mapInstanceRef.current!)
 
                 marker.bindPopup('<strong>Your location</strong>')
                 userMarkerRef.current = marker
