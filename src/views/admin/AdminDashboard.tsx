@@ -1,18 +1,19 @@
 import { workersData } from '@/data/services.data'
+import { useSessionUser } from '@/store/authStore'
 import { motion } from 'framer-motion'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
-import
-    {
-        PiCheckCircleDuotone,
-        PiClipboardTextDuotone,
-        PiClockDuotone,
-        PiCurrencyDollarDuotone,
-        PiMapPinDuotone,
-        PiTrendUpDuotone,
-        PiUsersDuotone,
-        PiWarningDuotone,
-    } from 'react-icons/pi'
+import {
+    PiCheckCircleDuotone,
+    PiClipboardTextDuotone,
+    PiClockDuotone,
+    PiCurrencyDollarDuotone,
+    PiMapPinDuotone,
+    PiTrendUpDuotone,
+    PiUsersDuotone,
+    PiVideoCameraDuotone,
+    PiWarningDuotone
+} from 'react-icons/pi'
 
 const AdminWorkersMap = () => {
     const mapRef = useRef<HTMLDivElement>(null)
@@ -255,6 +256,156 @@ const AdminWorkersMap = () => {
     )
 }
 
+const VideoConferencePanel = () => {
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const [stream, setStream] = useState<MediaStream | null>(null)
+    const [status, setStatus] = useState<'idle' | 'requesting' | 'ready' | 'error'>('idle')
+    const [error, setError] = useState<string | null>(null)
+    const [clientAuthorized, setClientAuthorized] = useState(false)
+    const { user } = useSessionUser()
+
+    const canAuthorize = Boolean(
+        user?.authority?.includes('admin') &&
+            (user?.email === 'sofia@ecme.com' || user?.canAuthorizeVideo)
+    )
+
+    useEffect(() => {
+        return () => {
+            if (stream) {
+                stream.getTracks().forEach((track) => track.stop())
+            }
+        }
+    }, [stream])
+
+    const requestCamera = async () => {
+        setError(null)
+
+        if (!navigator.mediaDevices?.getUserMedia) {
+            setStatus('error')
+            setError('Camera not supported in this browser/device.')
+            return
+        }
+
+        setStatus('requesting')
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            // Stop any previous stream before replacing
+            if (stream) {
+                stream.getTracks().forEach((track) => track.stop())
+            }
+            setStream(mediaStream)
+            if (videoRef.current) {
+                videoRef.current.srcObject = mediaStream
+                await videoRef.current.play().catch(() => undefined)
+            }
+            setStatus('ready')
+        } catch (e) {
+            const message = (e as Error)?.message || 'Camera permission was blocked or failed.'
+            setError(message)
+            setStatus('error')
+        }
+    }
+
+    const stopCamera = () => {
+        if (stream) {
+            stream.getTracks().forEach((track) => track.stop())
+            setStream(null)
+        }
+        if (videoRef.current) {
+            videoRef.current.srcObject = null
+        }
+        setStatus('idle')
+    }
+
+    const toggleClientAccess = () => {
+        if (!canAuthorize) {
+            setError('Only authorized admins can enable client video sessions.')
+            return
+        }
+        setClientAuthorized((prev) => !prev)
+    }
+
+    return (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <PiVideoCameraDuotone className="text-blue-600" />
+                        Live Video Collaboration
+                    </h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Sofia (admin) can start camera previews and authorize clients to join a secure video session.
+                        On Android or iOS, the browser will prompt for camera/mic permission when starting the preview.
+                    </p>
+                </div>
+                <div className={`px-3 py-1 rounded-full text-xs font-semibold ${clientAuthorized ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'}`}>
+                    {clientAuthorized ? 'Client video enabled' : 'Client video locked'}
+                </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex-1 space-y-3">
+                    <div className="flex gap-3 flex-wrap">
+                        <button
+                            onClick={requestCamera}
+                            disabled={status === 'requesting'}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed`}
+                        >
+                            {status === 'requesting' ? 'Requesting camera...' : 'Start camera preview'}
+                        </button>
+                        <button
+                            onClick={stopCamera}
+                            disabled={!stream}
+                            className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Stop
+                        </button>
+                        <button
+                            onClick={toggleClientAccess}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${clientAuthorized ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
+                        >
+                            {clientAuthorized ? 'Revoke client access' : 'Authorize client video' }
+                        </button>
+                    </div>
+
+                    <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                        <p>• Desktop: requests webcam + mic via your browser (local-only preview).</p>
+                        <p>• Android / iOS: the app will ask for camera permission when you tap "Start camera preview".</p>
+                        <p>• Only authorized admins (like Sofia) can unlock client-side video connections.</p>
+                    </div>
+
+                    {error && (
+                        <div className="px-3 py-2 rounded-lg bg-red-50 text-red-700 dark:bg-red-900/40 dark:text-red-100 text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="text-sm text-gray-700 dark:text-gray-200">
+                        Status: <span className="font-semibold capitalize">{status}</span>
+                    </div>
+                </div>
+
+                <div className="flex-1 bg-black rounded-lg overflow-hidden relative min-h-[240px]">
+                    <video
+                        ref={videoRef}
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        playsInline
+                    />
+                    {status !== 'ready' && (
+                        <div className="absolute inset-0 flex items-center justify-center text-gray-200 text-sm bg-black/60 text-center px-4">
+                            {status === 'requesting'
+                                ? 'Requesting camera permission...'
+                                : 'Start the camera to preview the video feed here.'}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const StatCard = ({
     title,
     value,
@@ -460,6 +611,12 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </>
+            )}
+
+            {selectedTab === 'overview' && (
+                <div className="mt-8">
+                    <VideoConferencePanel />
+                </div>
             )}
 
             {selectedTab === 'workers' && (

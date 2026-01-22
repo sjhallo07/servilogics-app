@@ -11,6 +11,7 @@ export type SignInResponse = {
         authority: string[]
         avatar: string
         email: string
+        canAuthorizeVideo?: boolean
     }
 }
 
@@ -43,6 +44,11 @@ export type User = {
     userName?: string | null
     email?: string | null
     authority?: string[]
+    /**
+     * Flag for admins who can authorize and start video sessions (e.g., Sofia).
+     * This is optional and used by UI components to gate camera controls.
+     */
+    canAuthorizeVideo?: boolean
 }
 
 export type Token = {

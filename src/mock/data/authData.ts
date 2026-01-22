@@ -18,6 +18,16 @@ export const signInUserData = [
         accountUserName: 'admin',
     },
     {
+        userId: '22',
+        avatar: '',
+        userName: 'Sofia',
+        email: 'sofia@ecme.com',
+        authority: ['admin', 'user'],
+        canAuthorizeVideo: true,
+        password: 'SofiaAdmin123',
+        accountUserName: 'sofia',
+    },
+    {
         userId: '31',
         avatar: '',
         userName: 'Client Demo',
