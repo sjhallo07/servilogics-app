@@ -1,5 +1,6 @@
 export type Direction = 'ltr' | 'rtl'
-export type Mode = 'light' | 'dark'
+export const ThemeModeSet = ['light', 'dark', 'system'] as const
+export type Mode = typeof ThemeModeSet[number]
 export type ControlSize = 'lg' | 'md' | 'sm'
 export type LayoutType =
     | 'blank'

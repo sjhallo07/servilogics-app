@@ -1,30 +1,30 @@
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import
-    {
-        PiWrenchDuotone,
-        PiShieldCheckDuotone,
-        PiVideoCameraDuotone,
-        PiPaintBrushDuotone,
-        PiSnowflakeDuotone,
-        PiGearDuotone,
-        PiArrowRightDuotone,
-        PiStarFill,
-        PiUsersDuotone,
-        PiCheckCircleDuotone,
-        PiClockDuotone,
-    } from 'react-icons/pi'
 import Button from '@/components/ui/Button'
 import { servicesData } from '@/data/services.data'
 import { useCurrencyStore } from '@/store/currencyStore'
+import { motion } from 'framer-motion'
+import
+    {
+        PiArrowRightDuotone,
+        PiCheckCircleDuotone,
+        PiClockDuotone,
+        PiGearDuotone,
+        PiPaintBrushDuotone,
+        PiShieldCheckDuotone,
+        PiSnowflakeDuotone,
+        PiStarFill,
+        PiUsersDuotone,
+        PiVideoCameraDuotone,
+        PiWrenchDuotone,
+    } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
 
 const serviceCategories = [
-    { icon: PiShieldCheckDuotone, name: 'Electric Fencing', color: 'from-yellow-500 to-orange-500' },
-    { icon: PiVideoCameraDuotone, name: 'Surveillance', color: 'from-blue-500 to-cyan-500' },
+    { icon: PiShieldCheckDuotone, name: 'Electric Fencing', color: 'from-amber-500 to-orange-500' },
+    { icon: PiVideoCameraDuotone, name: 'Surveillance', color: 'from-sky-500 to-blue-500' },
     { icon: PiPaintBrushDuotone, name: 'Painting', color: 'from-pink-500 to-rose-500' },
-    { icon: PiSnowflakeDuotone, name: 'AC Services', color: 'from-cyan-500 to-blue-500' },
-    { icon: PiGearDuotone, name: 'Maintenance', color: 'from-purple-500 to-indigo-500' },
-    { icon: PiWrenchDuotone, name: 'Repairs', color: 'from-green-500 to-emerald-500' },
+    { icon: PiSnowflakeDuotone, name: 'AC Services', color: 'from-cyan-500 to-sky-500' },
+    { icon: PiGearDuotone, name: 'Maintenance', color: 'from-blue-600 to-indigo-600' },
+    { icon: PiWrenchDuotone, name: 'Repairs', color: 'from-emerald-500 to-teal-500' },
 ]
 
 const stats = [
@@ -43,14 +43,14 @@ const Home = () =>
         <div className="min-h-screen">
             {/* Hero Section */}
             <motion.div
-                className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white py-20 px-6 mb-12 rounded-2xl overflow-hidden"
+                className="relative bg-gradient-to-br from-sky-700 via-blue-700 to-indigo-800 text-white py-20 px-6 mb-12 rounded-2xl overflow-hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
             >
                 <div className="absolute inset-0">
                     <div className="absolute inset-0 bg-[url('/img/pattern.svg')] opacity-10" />
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2" />
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400 rounded-full filter blur-3xl opacity-20 translate-x-1/2 translate-y-1/2" />
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-sky-400 rounded-full filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400 rounded-full filter blur-3xl opacity-20 translate-x-1/2 translate-y-1/2" />
                 </div>
                 <div className="relative z-10 max-w-5xl mx-auto">
                     <motion.div
@@ -125,7 +125,7 @@ const Home = () =>
 
             {/* Stats Section */}
             <motion.div
-                className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 mb-16"
+                className="bg-gradient-to-r from-sky-600 to-indigo-700 rounded-2xl p-8 mb-16"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
@@ -170,7 +170,7 @@ const Home = () =>
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 * index }}
                         >
-                            <div className="h-40 bg-gradient-to-br from-blue-500 to-purple-600" />
+                            <div className="h-40 bg-gradient-to-br from-sky-500 to-indigo-600" />
                             <div className="p-6">
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                     {service.name}

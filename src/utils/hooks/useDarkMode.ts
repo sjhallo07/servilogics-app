@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import type { Mode } from '@/@types/theme'
 import { THEME_ENUM } from '@/constants/theme.constant'
 import { useThemeStore } from '@/store/themeStore'
-import type { Mode } from '@/@types/theme'
+import { useEffect } from 'react'
 
 function useDarkMode(): [
     isEnabled: boolean,
@@ -10,16 +10,26 @@ function useDarkMode(): [
     const mode = useThemeStore((state) => state.mode)
     const setMode = useThemeStore((state) => state.setMode)
 
-    const { MODE_DARK, MODE_LIGHT } = THEME_ENUM
+    const { MODE_DARK, MODE_LIGHT, MODE_SYSTEM } = THEME_ENUM
 
-    const isEnabled = mode === MODE_DARK
+    // Determine the effective mode to apply (light/dark) considering 'system'
+    const prefersDark = typeof window !== 'undefined'
+        ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        : false
 
-    const onModeChange = (mode: Mode) => {
-        setMode(mode)
+    const appliedMode = mode === MODE_SYSTEM
+        ? (prefersDark ? MODE_DARK : MODE_LIGHT)
+        : mode
+
+    const isEnabled = appliedMode === MODE_DARK
+
+    const onModeChange = (nextMode: Mode) => {
+        setMode(nextMode)
     }
 
+    // Apply class to <html> based on applied mode
     useEffect(() => {
-        if (window === undefined) {
+        if (typeof window === 'undefined') {
             return
         }
         const root = window.document.documentElement
@@ -27,6 +37,30 @@ function useDarkMode(): [
         root.classList.add(isEnabled ? MODE_DARK : MODE_LIGHT)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEnabled])
+
+    // When in 'system' mode, respond to OS theme changes
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return
+        }
+        if (mode !== MODE_SYSTEM) {
+            return
+        }
+        const media = window.matchMedia('(prefers-color-scheme: dark)')
+        const handleChange = (e: MediaQueryListEvent) => {
+            const root = window.document.documentElement
+            if (e.matches) {
+                root.classList.remove(MODE_LIGHT)
+                root.classList.add(MODE_DARK)
+            } else {
+                root.classList.remove(MODE_DARK)
+                root.classList.add(MODE_LIGHT)
+            }
+        }
+        media.addEventListener?.('change', handleChange)
+        return () => media.removeEventListener?.('change', handleChange)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mode])
 
     return [isEnabled, onModeChange]
 }

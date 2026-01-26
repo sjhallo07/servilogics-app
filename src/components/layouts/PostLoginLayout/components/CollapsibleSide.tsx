@@ -3,7 +3,7 @@ import LayoutBase from '@/components//template/LayoutBase'
 import UserProfileDropdown from '@/components//template/UserProfileDropdown'
 import { HealthStatus } from '@/components/shared'
 import Chatbot from '@/components/shared/Chatbot'
-import { CartButton, CurrencySelector, LanguageSelector } from '@/components/shared/HeaderExtras'
+import { CartButton, CurrencySelector, LanguageSelector, ThemeModeSelector } from '@/components/shared/HeaderExtras'
 import Header from '@/components/template/Header'
 import MobileNav from '@/components/template/MobileNav'
 import SideNav from '@/components/template/SideNav'
@@ -39,6 +39,7 @@ const CollapsibleSide = ({ children }: CommonProps) =>
                         }
                         headerEnd={
                             <div className="flex items-center gap-3">
+                                <ThemeModeSelector />
                                 <LanguageSelector />
                                 <CurrencySelector />
                                 <CartButton />

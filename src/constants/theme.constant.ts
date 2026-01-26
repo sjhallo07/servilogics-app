@@ -2,6 +2,7 @@ export const DIR_RTL = 'rtl'
 export const DIR_LTR = 'ltr'
 export const MODE_LIGHT = 'light'
 export const MODE_DARK = 'dark'
+export const MODE_SYSTEM = 'system'
 
 export const SIDE_NAV_WIDTH = 290
 export const SIDE_NAV_COLLAPSED_WIDTH = 80
@@ -20,6 +21,7 @@ export const THEME_ENUM = {
     DIR_LTR: DIR_LTR,
     MODE_LIGHT: MODE_LIGHT,
     MODE_DARK: MODE_DARK,
+    MODE_SYSTEM: MODE_SYSTEM,
     SIDE_NAV_WIDTH: SIDE_NAV_WIDTH,
     SIDE_NAV_COLLAPSED_WIDTH: SIDE_NAV_COLLAPSED_WIDTH,
     SPLITTED_SIDE_NAV_MINI_WIDTH: SPLITTED_SIDE_NAV_MINI_WIDTH,
