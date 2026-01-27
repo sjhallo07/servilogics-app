@@ -141,6 +141,23 @@ export const updateWorkerAvailability = async (workerId, availability) => {
 }
 
 /**
+ * Send heartbeat (presence) for a worker (admin/staff)
+ */
+export const heartbeatWorker = async (workerId: string) => {
+    try {
+        const response = await axios.post(
+            `${API_BASE_URL}/${workerId}/heartbeat`,
+            {},
+            createRequest()
+        )
+        return response.data
+    } catch (error) {
+        console.error('Error sending heartbeat:', error)
+        throw error
+    }
+}
+
+/**
  * Upload worker photo
  */
 export const uploadWorkerPhoto = async (workerId, file) => {
@@ -200,6 +217,7 @@ export default {
     updateWorker,
     updateWorkerLocation,
     updateWorkerAvailability,
+    heartbeatWorker,
     uploadWorkerPhoto,
     deleteWorker,
     getZones

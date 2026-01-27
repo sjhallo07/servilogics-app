@@ -28,6 +28,7 @@ export const DEFAULT_WORKERS = [
     skills: ['Electrical', 'Surveillance', 'Installation'],
     experience: 8,
     certifications: ['Electrical License', 'Security Cert'],
+    lastSeen: Date.now(),
   },
   {
     id: 'wrk-002',
@@ -46,6 +47,7 @@ export const DEFAULT_WORKERS = [
     skills: ['Painting', 'Maintenance', 'Quality Control'],
     experience: 12,
     certifications: ['Paint Specialist', 'Safety Training'],
+    lastSeen: Date.now(),
   },
   {
     id: 'wrk-003',
@@ -64,6 +66,7 @@ export const DEFAULT_WORKERS = [
     skills: ['AC/HVAC', 'Emergency Response', 'Diagnostics'],
     experience: 10,
     certifications: ['HVAC Certified', 'EPA Certified'],
+    lastSeen: Date.now(),
   },
   {
     id: 'wrk-004',
@@ -81,6 +84,7 @@ export const DEFAULT_WORKERS = [
     skills: ['Industrial Systems', 'Maintenance', 'Training'],
     experience: 15,
     certifications: ['Industrial Cert', 'Advanced Training'],
+    lastSeen: Date.now(),
   },
 ];
 
@@ -159,6 +163,7 @@ export async function createWorkerDb(payload) {
     currentLocation: payload.currentLocation || null,
     rating: payload.rating || 0,
     reviewCount: payload.reviewCount || 0,
+    lastSeen: Date.now(),
   };
   await col.insertOne(worker);
   return worker;
@@ -196,4 +201,8 @@ export async function setWorkerPhotoDb(id, photoPath) {
 // Fallback provider when MongoDB is unavailable
 export function getDefaultWorkers() {
   return DEFAULT_WORKERS;
+}
+
+export async function updateWorkerLastSeenDb(id) {
+  return updateWorkerDb(id, { lastSeen: Date.now() });
 }

@@ -147,6 +147,7 @@ const WorkersMap = () => {
     const [zones, setZones] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [isFallback, setIsFallback] = useState<boolean>(false)
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
     const [locationError, setLocationError] = useState<string | null>(null)
     const mapRef = useRef<HTMLDivElement>(null)
@@ -167,6 +168,7 @@ const WorkersMap = () => {
                 setLoading(true)
                 const response = await WorkerService.getWorkers()
                 if (response.success) {
+                    setIsFallback(Boolean((response as any).fallback))
                     const filtered = filterWorkersByRole(response.data, role as UserRole)
                     setWorkers(response.data)
                     setFilteredWorkers(filtered)
@@ -445,6 +447,21 @@ const WorkersMap = () => {
 
     return (
         <div className="min-h-screen">
+            {/* Connectivity banner */}
+            <div className="mb-3">
+                {(error || isFallback) && (
+                    <div className={`rounded-lg px-4 py-3 text-sm ${error ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}`}>
+                        {error ? (
+                            <span>Backend connection failed. Showing limited interface.</span>
+                        ) : (
+                            <span>Backend offline — showing cached/mock data.</span>
+                        )}
+                        {isAdmin && (
+                            <span className="ml-2 font-medium">(Admin)</span>
+                        )}
+                    </div>
+                )}
+            </div>
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     Find Workers Near You
@@ -498,6 +515,11 @@ const WorkersMap = () => {
                         ref={mapRef}
                         className="w-full h-[500px] rounded-xl overflow-hidden shadow-sm bg-gray-200 dark:bg-gray-700"
                     />
+                    {filteredWorkers.length === 0 && (
+                        <div className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+                            No workers found in this selection. {isFallback && 'Data shown may be limited.'}
+                        </div>
+                    )}
                     <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
                         <button
                             type="button"
@@ -633,6 +655,9 @@ const WorkersMap = () => {
                                         ({selectedWorker.reviewCount} reviews)
                                     </span>
                                 </div>
+                            )}
+                            {typeof (selectedWorker as any).lastSeen !== 'undefined' && (
+                                <p className="mt-2 text-xs text-gray-500">Last seen: {new Date((selectedWorker as any).lastSeen).toLocaleString()}</p>
                             )}
                         </div>
 

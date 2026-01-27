@@ -12,6 +12,7 @@ import {
     setWorkerPhotoDb,
     updateWorkerAvailabilityDb,
     updateWorkerDb,
+    updateWorkerLastSeenDb,
     updateWorkerLocationDb,
 } from '../utils/db.js';
 
@@ -273,6 +274,36 @@ router.post('/:id/availability', async (req, res) => {
       success: false,
       error: error.message,
     });
+  }
+});
+
+/**
+ * POST /api/workers/:id/heartbeat
+ * Update worker lastSeen timestamp (staff only or admin) for mobile/app presence
+ */
+router.post('/:id/heartbeat', async (req, res) => {
+  try {
+    const userRole = req.query.role || 'client';
+    const userId = req.query.userId;
+
+    if (userRole !== 'admin' && userRole !== 'staff') {
+      return res.status(403).json({ success: false, error: 'Only staff and admins can send heartbeat' });
+    }
+
+    const worker = await getWorkerDb(req.params.id);
+    if (!worker) {
+      return res.status(404).json({ success: false, error: 'Worker not found' });
+    }
+
+    // If not admin, ensure a staff only updates own heartbeat
+    if (userRole !== 'admin' && userId !== req.params.id) {
+      return res.status(403).json({ success: false, error: 'Not authorized to update this worker heartbeat' });
+    }
+
+    const updated = await updateWorkerLastSeenDb(req.params.id);
+    res.json({ success: true, data: updated, message: 'Heartbeat recorded' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

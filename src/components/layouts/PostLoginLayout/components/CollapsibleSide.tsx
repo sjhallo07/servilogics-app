@@ -11,10 +11,15 @@ import SideNavToggle from '@/components/template/SideNavToggle'
 import { APP_NAME } from '@/constants/app.constant'
 import { LAYOUT_COLLAPSIBLE_SIDE } from '@/constants/theme.constant'
 import useResponsive from '@/utils/hooks/useResponsive'
+import useStaffHeartbeat from '@/utils/hooks/useStaffHeartbeat'
+import { useRBAC } from '@/utils/rbac'
 
 const CollapsibleSide = ({ children }: CommonProps) =>
 {
     const { larger, smaller } = useResponsive()
+    const { isAdmin } = useRBAC()
+    // Start periodic heartbeat for staff users (handled inside hook)
+    useStaffHeartbeat()
 
     return (
         <LayoutBase
@@ -43,7 +48,7 @@ const CollapsibleSide = ({ children }: CommonProps) =>
                                 <LanguageSelector />
                                 <CurrencySelector />
                                 <CartButton />
-                                <HealthStatus intervalMs={15000} />
+                                {isAdmin && <HealthStatus intervalMs={15000} />}
                                 <UserProfileDropdown hoverable={false} />
                             </div>
                         }
