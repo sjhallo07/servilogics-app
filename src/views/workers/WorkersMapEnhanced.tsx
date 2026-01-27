@@ -5,13 +5,12 @@ import { filterWorkersByRole, useRBAC, type UserRole } from '@/utils/rbac'
 import { motion } from 'framer-motion'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
-import
-    {
-        PiEnvelopeDuotone,
-        PiImageSquareDuotone,
-        PiPhoneDuotone,
-        PiStarFill
-    } from 'react-icons/pi'
+import {
+    PiEnvelopeDuotone,
+    PiImageSquareDuotone,
+    PiPhoneDuotone,
+    PiStarFill,
+} from 'react-icons/pi'
 
 const availabilityColors: Record<string, string> = {
     available: 'bg-green-500',
@@ -547,7 +546,7 @@ const WorkersMap = () => {
                                                 ) : (
                                                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
                                                         {selectedWorker.name.split(' ').map((n: string) => n[0]).join('')}
-                                                    </div>
+                                                        {selectedWorker.name.split(' ').filter((n: string) => n).map((n: string) => n[0]).join('')}
                                                 )}
                                                 <span
                                                     className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white dark:border-gray-800 ${availabilityColors[selectedWorker.availability]}`}

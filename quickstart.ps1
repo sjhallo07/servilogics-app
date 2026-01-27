@@ -45,7 +45,7 @@ function Show-Help {
     Write-Host "  .\quickstart.ps1 -FrontendOnly        # Start only frontend"
     Write-Host "  .\quickstart.ps1 -BackendOnly         # Start only backend"
     Write-Host ""
-    Write-Host "Notes:" -ForegroundColor Cyan"
+    Write-Host "Notes:" -ForegroundColor Cyan
     Write-Host "  - Requires Node.js 18+ and npm"
     Write-Host "  - Backend default: http://localhost:3001"
     Write-Host "  - Frontend default: http://localhost:5173"
