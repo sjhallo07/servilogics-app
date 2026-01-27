@@ -106,7 +106,7 @@ print_header "Checking Service Health"
 sleep 5
 
 # Check backend health
-if curl -f http://localhost:3001/health &> /dev/null; then
+if curl -f http://localhost:3001/api/health &> /dev/null; then
     print_success "Backend is healthy"
 else
     print_warning "Backend health check failed. It may still be starting up."

@@ -218,7 +218,7 @@ Both services include health checks:
 ### Backend Health Check
 
 ```bash
-curl http://localhost:3001/health
+curl http://localhost:3001/api/health
 ```
 
 ### Frontend Health Check
@@ -373,7 +373,7 @@ Security best practices implemented:
 
 For issues or questions:
 1. Check the logs: `docker-compose logs -f`
-2. Verify service health: `curl http://localhost:3001/health`
+2. Verify service health: `curl http://localhost:3001/api/health`
 3. Review container status: `docker ps -a`
 4. Check resource usage: `docker stats`
 
