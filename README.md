@@ -101,8 +101,11 @@ Troubleshooting
 
 - Node.js 18+
 - npm or yarn
+- Docker and Docker Compose (optional, for containerized deployment)
 
 ## Installation
+
+### Standard Installation
 
 ```bash
 # Install dependencies
@@ -117,6 +120,27 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+### Docker Installation
+
+For containerized deployment in GitHub Codespaces or Docker-enabled environments:
+
+```bash
+# Development mode (with hot reload)
+npm run docker:dev
+
+# Production mode
+npm run docker:build
+npm run docker:prod
+
+# View logs
+npm run docker:logs
+
+# Stop containers
+npm run docker:stop
+```
+
+See [DOCKER_GUIDE.md](DOCKER_GUIDE.md) for comprehensive Docker setup and usage instructions.
 
 ## Project Structure
 

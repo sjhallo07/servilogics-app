@@ -1,0 +1,27 @@
+# Backend Development Dockerfile - Node.js + Express with hot reload
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY backend/package*.json ./
+
+# Install dependencies (including dev dependencies)
+RUN npm install
+
+# Copy backend source code (will be overridden by volume mount in dev)
+COPY backend/ .
+
+# Create data directory
+RUN mkdir -p data/uploads && \
+    chown -R node:node /app
+
+# Switch to non-root user
+USER node
+
+# Expose backend port
+EXPOSE 3001
+
+# Start development server with watch mode
+CMD ["npm", "run", "dev"]

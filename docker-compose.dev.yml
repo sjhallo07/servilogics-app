@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Backend API Service (Development with hot reload)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend.dev
+    container_name: ecme-backend-dev
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - AGENT_HOST_ALLOWLIST=localhost,127.0.0.1,api.openai.com,*.openai.azure.com
+      - AGENT_TIMEOUT_MS=60000
+      - AGENT_MAX_REQ_BODY=262144
+      - AGENT_MAX_NONSTREAM_RESP=2097152
+      - AGENT_SSE_HEARTBEAT_MS=15000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend-data:/app/data
+    networks:
+      - ecme-network
+    command: npm run dev
+
+  # Frontend Service (Development with hot reload)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.dev
+    container_name: ecme-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "5175:5175"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/backend
+    depends_on:
+      - backend
+    networks:
+      - ecme-network
+    command: npm run dev
+
+networks:
+  ecme-network:
+    driver: bridge
+
+volumes:
+  backend-data:
+    driver: local
