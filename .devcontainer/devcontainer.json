@@ -1,11 +1,30 @@
 {
-  "name": "React TS Devcontainer",
-  "image": "mcr.microsoft.com/devcontainers/node:20",
-  "postCreateCommand": "true",
+  "name": "React TS Devcontainer with Docker",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableNonRootDocker": "true",
+      "moby": "true"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
-      "extensions": ["ms-vscode.vscode-typescript-next", "esbenp.prettier-vscode"],
-      "settings": { "files.autoSave": "onFocusChange", "editor.formatOnSave": true }
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "files.autoSave": "onFocusChange",
+        "editor.formatOnSave": true
+      }
     }
-  }
+  },
+  "remoteUser": "node",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ]
 }

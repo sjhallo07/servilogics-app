@@ -14,7 +14,15 @@
     "lint:backend": "npx eslint -c backend/eslint.config.mjs backend/src",
     "lint:all": "npm run lint && npm run lint:backend",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "test": "exit 0"
+    "test": "exit 0",
+    "docker:validate": "./docker-validate.sh",
+    "docker:build": "./docker-build.sh",
+    "docker:dev": "./docker-deploy.sh dev",
+    "docker:prod": "./docker-deploy.sh production",
+    "docker:stop": "docker-compose down",
+    "docker:stop:dev": "docker-compose -f docker-compose.dev.yml down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:logs:dev": "docker-compose -f docker-compose.dev.yml logs -f"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",
