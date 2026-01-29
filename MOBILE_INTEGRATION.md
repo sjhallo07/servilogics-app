@@ -16,7 +16,7 @@ Example: `POST /api/workers/wrk-001/location?role=staff&userId=wrk-001`
 
 ## Endpoints
 
-### 1) Update Location
+### 1 Update Location
 
 ```http
 POST /api/workers/:id/location?role=staff&userId=:id
@@ -45,14 +45,14 @@ Response:
 }
 ```
 
-### 2) Update Availability
+### 2 Update Availability
 
 ```http
 POST /api/workers/:id/availability?role=staff&userId=:id
 Content-Type: application/json
 
 {
-  "availability": "available" // one of: available | busy | offline
+  "availability": "available"
 }
 ```
 
@@ -66,7 +66,7 @@ Response:
 }
 ```
 
-### 3) Heartbeat (Presence)
+### 3 Heartbeat (Presence)
 
 ```http
 POST /api/workers/:id/heartbeat?role=staff&userId=:id
