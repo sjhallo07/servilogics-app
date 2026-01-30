@@ -71,5 +71,15 @@
   "github.copilot.chat.scopeSelection": true,
   "github.copilot.chat.githubMcpServer.lockdown": true,
   "github.copilot.nextEditSuggestions.extendedRange": true,
-  "github.copilot.chat.tools.memory.enabled": true
+  "github.copilot.chat.tools.memory.enabled": true,
+  "powershell.integratedConsole.suppressStartupBanner": true,
+  "powershell.integratedConsole.startInBackground": true,
+  "powershell.integratedConsole.forceClearScrollbackBuffer": true,
+  "powershell.analyzeOpenDocumentsOnly": true,
+  "powershell.debugging.createTemporaryIntegratedConsole": true,
+  "powershell.startAsLoginShell.linux": true,
+  "powershell.buttons.showPanelMovementButtons": true,
+  "powershell.sideBar.CommandExplorerVisibility": true,
+  "powershell.suppressAdditionalExeNotFoundWarning": true,
+  "github.copilot.selectedCompletionModel": "Configure Code Completions"
 }

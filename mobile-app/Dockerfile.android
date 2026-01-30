@@ -2,7 +2,8 @@
 FROM node:20-bullseye as build
 
 # Install required tools
-RUN apt-get update && apt-get install -y openjdk-17-jdk wget unzip git && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/cache/apt/archives/partial && \
+    apt-get update && apt-get install -y openjdk-17-jdk wget unzip git && rm -rf /var/lib/apt/lists/*
 
 # Set up Android SDK
 ENV ANDROID_SDK_ROOT /opt/android-sdk
