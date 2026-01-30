@@ -292,7 +292,7 @@ services:
   
   apk-analyzer:
     <<: *common-build
-    image: openjdk:11-jre-slim
+    image: eclipse-temurin:11-jre
     container_name: ecme-apk-analyzer
     depends_on:
       - android-builder

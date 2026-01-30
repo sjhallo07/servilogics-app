@@ -1,5 +1,5 @@
 # Dockerfile.android
-FROM node:18-bullseye as build
+FROM node:20-bullseye as build
 
 # Install required tools
 RUN apt-get update && apt-get install -y openjdk-17-jdk wget unzip git && rm -rf /var/lib/apt/lists/*
