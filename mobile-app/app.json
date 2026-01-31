@@ -30,8 +30,16 @@
         "ACCESS_COARSE_LOCATION"
       ]
     },
+    "plugins": [
+      "./plugins/copy-android-files.plugin.js"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f41ff251-5efc-411a-97a4-2e80a5c98ac7"
+      }
     }
   }
 }
