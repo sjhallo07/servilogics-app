@@ -8,15 +8,24 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "eas:build:android:apk": "eas build --platform android --profile preview",
-    "eas:build:android:bundle": "eas build --platform android --profile production"
+    "eas:build:android:bundle": "eas build --platform android --profile production",
+    "env:check": "node scripts/checkEnv.js"
   },
   "dependencies": {
+    "@expo/config-plugins": "^54.0.4",
+    "@react-navigation/native": "^7.1.28",
+    "@react-navigation/native-stack": "^7.11.0",
+    "dotenv": "^17.2.3",
     "expo": "~54.0.32",
     "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-native": "0.81.5",
     "fs-extra": "^11.1.1",
-    "@expo/config-plugins": "^5.0.0"
+    "react": "19.1.0",
+    "react-dom": "^19.1.0",
+    "react-native": "0.81.5",
+    "react-native-gesture-handler": "^2.30.0",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-screens": "^4.20.0",
+    "react-native-web": "^0.21.2"
   },
   "private": true
 }
