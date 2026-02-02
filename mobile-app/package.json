@@ -7,27 +7,24 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "eas:build:android:apk": "eas build --platform android --profile preview",
-    "eas:build:android:bundle": "eas build --platform android --profile production",
+    "eas:build:android:apk": "npx eas-cli build --platform android --profile preview",
+    "eas:build:android:bundle": "npx eas-cli build --platform android --profile production",
     "env:check": "node scripts/checkEnv.js"
   },
   "dependencies": {
-    "@react-navigation/native": "^7.1.28",
-    "@react-navigation/native-stack": "^7.11.0",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/native-stack": "^6.9.26",
     "dotenv": "^17.2.3",
-    "expo": "~54.0.32",
-    "expo-status-bar": "~3.0.9",
-    "fs-extra": "^11.1.1",
-    "react": "19.1.0",
-    "react-dom": "^19.1.0",
-    "react-native": "0.81.5",
-    "react-native-gesture-handler": "^2.30.0",
-    "react-native-safe-area-context": "^5.6.2",
-    "react-native-screens": "^4.20.0",
-    "react-native-web": "^0.21.2"
+    "expo": "~52.0.25",
+    "expo-build-properties": "~0.13.2",
+    "expo-constants": "~17.0.3",
+    "expo-status-bar": "~2.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-gesture-handler": "~2.20.2",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "~4.1.0"
   },
-  "private": true,
-  "devDependencies": {
-    "@expo/config-plugins": "^54.0.4"
-  }
+  "private": true
 }

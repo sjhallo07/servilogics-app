@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import crypto from 'node:crypto'
 import { connectMongo, getCollection } from '../utils/db.js'
 import { initSSE, writeEvent, startHeartbeat } from '../utils/sse.js'
 
@@ -44,7 +45,7 @@ router.post('/', async (req, res) => {
         const evt = req.body || {}
 
         // Minimal validation
-        if (!evt.eventId) evt.eventId = crypto.randomUUID?.() || String(Date.now())
+        if (!evt.eventId) evt.eventId = crypto.randomUUID()
         if (!evt.timestamp) evt.timestamp = new Date().toISOString()
         await col.insertOne(evt)
         res.status(202).json({ ok: true, requestId: evt.correlationId || evt.eventId, status: 'queued' })
