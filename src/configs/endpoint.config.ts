@@ -8,6 +8,10 @@ const endpointConfig = {
     resetPassword: '/reset-password',
     oauthGoogle: '/oauth/google',
     oauthGithub: '/oauth/github',
+    // Added for connectivity verification
+    health: '/health',
+    workers: '/workers',
+    inventory: '/inventory/items',
 }
 
 export default endpointConfig

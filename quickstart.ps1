@@ -87,7 +87,7 @@ function Install-IfMissing {
         Write-Host "📦 Installing dependencies in $Name ..." -ForegroundColor Blue
         Push-Location $Dir
         try {
-            npm install 2>&1 | Out-Null
+            npm install
             Write-Host "✅ Dependencies installed in $Name" -ForegroundColor Green
         } catch {
             Write-Host "❌ Failed to install dependencies in $Name" -ForegroundColor Red
@@ -118,8 +118,10 @@ function Start-Backend {
     
     $backendDir = Join-Path $PSScriptRoot 'backend'
     $env:PORT = $Port
-    $script:BackendProc = Start-Process npm `
-        -ArgumentList @('start') `
+
+    # Use npm.cmd on Windows for better compatibility
+    $script:BackendProc = Start-Process "npm.cmd" `
+        -ArgumentList "start" `
         -WorkingDirectory $backendDir `
         -PassThru `
         -NoNewWindow
@@ -164,9 +166,6 @@ function Cleanup {
 # Set error action
 $ErrorActionPreference = 'Stop'
 
-# Register cleanup on exit
-$null = Register-EngineEvent -SourceIdentifier PowerShell.Exiting -Action { Cleanup }
-
 # Main execution
 Show-Banner
 
@@ -196,8 +195,11 @@ Write-Host ""
 
 $script:BackendProc = $null
 
-$backendPort = [int]($env:PORT | ForEach-Object { if ($_ -match '^\d+$') { $_ } else { 3001 } })
-$frontendPort = [int]($env:FRONTEND_PORT | ForEach-Object { if ($_ -match '^\d+$') { $_ } else { 5173 } })
+$backendPort = 3001
+if ($env:PORT -match '^\d+$') { $backendPort = [int]$env:PORT }
+
+$frontendPort = 5173
+if ($env:FRONTEND_PORT -match '^\d+$') { $frontendPort = [int]$env:FRONTEND_PORT }
 
 if (-not $FrontendOnly) {
     if (-not (Start-Backend -Port $backendPort)) {

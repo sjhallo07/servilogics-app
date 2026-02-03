@@ -1,6 +1,10 @@
 import 'dotenv/config'
 
 export default ({ config }) => {
+  // Clean the API URL: remove leading '=' and trailing slashes
+  const rawApiUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+  const cleanedApiUrl = rawApiUrl.replace(/^=/, '').replace(/\/$/, '');
+
   return {
     ...config,
     name: 'servilogics-mobile-app',
@@ -14,10 +18,6 @@ export default ({ config }) => {
         backgroundColor: '#ffffff'
       }
     },
-    ios: {
-      supportsTablet: true,
-      bundleIdentifier: 'com.servilogics.mobile'
-    },
     plugins: [
       [
         'expo-build-properties',
@@ -30,14 +30,10 @@ export default ({ config }) => {
     ],
     extra: {
       ...config.extra,
-      API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:3001',
-      VITE_FIREBASE_API_KEY: process.env.VITE_FIREBASE_API_KEY || '',
-      VITE_GOOGLE_MAPS_API_KEY: process.env.VITE_GOOGLE_MAPS_API_KEY || '',
+      API_BASE_URL: cleanedApiUrl,
       ENABLE_AI_FEATURES: process.env.ENABLE_AI_FEATURES === 'true',
       ENABLE_REALTIME_UPDATES: process.env.ENABLE_REALTIME_UPDATES === 'true',
       ENABLE_CHATBOT: process.env.ENABLE_CHATBOT === 'true',
-      APP_ID: 'com.servilogics.mobile',
-      APP_VERSION_CODE: '1',
       eas: {
         projectId: '642c8675-a9c6-4b86-b449-9de26a1d5280',
       },
