@@ -87,5 +87,6 @@
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.chat.anthropic.useMessagesApi": true,
   "github.copilot.chat.anthropic.tools.websearch.enabled": true,
-  "github.copilot.chat.alternateGptPrompt.enabled": true
+  "github.copilot.chat.alternateGptPrompt.enabled": true,
+  "java.help.collectErrorLog": true
 }
