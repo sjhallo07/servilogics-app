@@ -16,14 +16,14 @@ $Colors = @{
 function Show-Banner {
     Write-Host ""
     Write-Host "╔══════════════════════════════════════════════════════════════╗" -ForegroundColor Blue
-    Write-Host "║                   ECME LITE QUICKSTART                      ║" -ForegroundColor Blue
-    Write-Host "║            Full-Stack Development Environment Setup          ║" -ForegroundColor Blue
+    Write-Host "║                    SERVILOGICS QUICKSTART                   ║" -ForegroundColor Blue
+    Write-Host "║         Backend + Web (and mobile guidance) Startup          ║" -ForegroundColor Blue
     Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor Blue
     Write-Host ""
 }
 
 function Show-Help {
-    Write-Host "quickstart.ps1 - Install dependencies and run frontend + backend servers." -ForegroundColor Cyan
+    Write-Host "quickstart.ps1 - Install dependencies and run backend + web dev servers." -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Usage:" -ForegroundColor Cyan
     Write-Host "  .\quickstart.ps1 [options]"
@@ -49,6 +49,7 @@ function Show-Help {
     Write-Host "  - Requires Node.js 18+ and npm"
     Write-Host "  - Backend default: http://localhost:3001"
     Write-Host "  - Frontend default: http://localhost:5173"
+    Write-Host "  - Mobile apps started via 'npx expo start' in their folders (see footer)"
     Write-Host "  - Press Ctrl+C to stop all services"
     Write-Host ""
 }
@@ -228,6 +229,10 @@ if ($BackendOnly) {
     Write-Host "  Frontend:  http://localhost:$frontendPort" -ForegroundColor Green
     Write-Host "  Backend:   http://localhost:$backendPort" -ForegroundColor Green
     Write-Host "  Health:    http://localhost:$backendPort/api/health" -ForegroundColor Green
+    Write-Host "" 
+    Write-Host "Mobile apps (run in separate terminals):" -ForegroundColor Blue
+    Write-Host "  Classic Expo app:   cd mobile-app; npx expo start" -ForegroundColor Green
+    Write-Host "  Expo Router app:    cd servilogics-app/servilogics-app; npx expo start" -ForegroundColor Green
     Write-Host ""
     Write-Host "Press Ctrl+C to stop all services" -ForegroundColor Blue
     Write-Host ""

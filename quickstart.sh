@@ -37,7 +37,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 echo "========================================="
-echo "🗺️  Ecme-lite Local Setup"
+echo "🗺️  Servilogics Quickstart"
 echo "========================================="
 echo ""
 
@@ -143,6 +143,11 @@ fi
 echo "🌐 Frontend starting on port $FRONTEND_PORT..."
 echo ""
 echo "💡 Tip: Allow location access when prompted"
+echo ""
+echo "📱 Mobile apps (run in separate terminals):"
+echo "  Classic Expo app:   cd mobile-app && npx expo start"
+echo "  Expo Router app:    cd servilogics-app/servilogics-app && npx expo start"
+echo ""
 echo "🛑 Press Ctrl+C to stop all services"
 echo ""
 
