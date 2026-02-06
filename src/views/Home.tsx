@@ -1,6 +1,8 @@
+import type { Service } from '@/@types/services'
 import HealthStatus from '@/components/shared/HealthStatus'
 import Button from '@/components/ui/Button'
 import { servicesData } from '@/data/services.data'
+import { getServices } from '@/services/ServicesService'
 import { useCurrencyStore } from '@/store/currencyStore'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
@@ -90,7 +92,9 @@ const stats = [
 const Home = () =>
 {
     const formatPrice = useCurrencyStore((state) => state.formatPrice)
-    const featuredServices = servicesData.slice(0, 3)
+    const [featuredServices, setFeaturedServices] = useState<Service[]>(servicesData.slice(0, 3))
+    const [loadingFeatured, setLoadingFeatured] = useState(true)
+    const [featuredError, setFeaturedError] = useState<string | null>(null)
     const [active, setActive] = useState(0)
     const ActiveIcon = conceptSlides[active].icon
 
@@ -99,6 +103,35 @@ const Home = () =>
             setActive((prev) => (prev + 1) % conceptSlides.length)
         }, 5000)
         return () => clearInterval(id)
+    }, [])
+
+    useEffect(() => {
+        let cancelled = false
+
+        const loadFeatured = async () => {
+            try {
+                const services = await getServices()
+                if (!cancelled && Array.isArray(services) && services.length > 0) {
+                    setFeaturedServices(services.slice(0, 3))
+                }
+            }
+            catch (e) {
+                if (!cancelled) {
+                    setFeaturedError('Unable to load featured services')
+                }
+            }
+            finally {
+                if (!cancelled) {
+                    setLoadingFeatured(false)
+                }
+            }
+        }
+
+        void loadFeatured()
+
+        return () => {
+            cancelled = true
+        }
     }, [])
 
     return (

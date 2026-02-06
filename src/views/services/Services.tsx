@@ -1,6 +1,7 @@
 import type { Service, ServiceCategory, ServiceSector } from '@/@types/services'
 import Button from '@/components/ui/Button'
 import { servicesData } from '@/data/services.data'
+import { getServices } from '@/services/ServicesService'
 import { useCartStore } from '@/store/cartStore'
 import { useCurrencyStore } from '@/store/currencyStore'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -145,6 +146,9 @@ const ServiceCard = ({ service }: { service: Service }) => {
 }
 
 const Services = () => {
+    const [services, setServices] = useState<Service[]>(servicesData)
+    const [loadingServices, setLoadingServices] = useState(true)
+    const [servicesError, setServicesError] = useState<string | null>(null)
     const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | 'all'>('all')
     const [selectedSector, setSelectedSector] = useState<ServiceSector | 'all'>('all')
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -158,7 +162,36 @@ const Services = () => {
         return () => window.clearInterval(id)
     }, [slides.length])
 
-    const filteredServices = servicesData.filter((service) => {
+    useEffect(() => {
+        let cancelled = false
+
+        const loadServices = async () => {
+            try {
+                const apiServices = await getServices()
+                if (!cancelled && Array.isArray(apiServices) && apiServices.length > 0) {
+                    setServices(apiServices)
+                }
+            }
+            catch (e) {
+                if (!cancelled) {
+                    setServicesError('Unable to load services list')
+                }
+            }
+            finally {
+                if (!cancelled) {
+                    setLoadingServices(false)
+                }
+            }
+        }
+
+        void loadServices()
+
+        return () => {
+            cancelled = true
+        }
+    }, [])
+
+    const filteredServices = services.filter((service) => {
         const categoryMatch = selectedCategory === 'all' || service.category === selectedCategory
         const sectorMatch = selectedSector === 'all' || service.sector.includes(selectedSector)
         return categoryMatch && sectorMatch

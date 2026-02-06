@@ -11,6 +11,8 @@
         "ms-vscode.powershell",
         "vscjava.vscode-java-pack",
         "expo.vscode-expo-tools",
-        "vscjava.vscode-java-debug"
+        "vscjava.vscode-java-debug",
+        "redhat.vscode-commons",
+        "redhat.project-initializer"
     ]
 }

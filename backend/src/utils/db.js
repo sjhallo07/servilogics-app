@@ -127,6 +127,23 @@ export async function ensureIndexes() {
   ]);
 }
 
+// ----- Services collection helpers -----
+
+async function servicesCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_SERVICES || 'services');
+}
+
+export async function listServicesDb() {
+  const col = await servicesCollection();
+  return col.find({}).toArray();
+}
+
+export async function getServiceDb(serviceId) {
+  const col = await servicesCollection();
+  return col.findOne({ serviceId });
+}
+
 // ----- Worker collection helpers -----
 
 async function workersCollection() {
