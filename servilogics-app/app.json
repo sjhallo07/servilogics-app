@@ -9,7 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,6 +23,7 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "usesCleartextTraffic": true,
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
@@ -45,7 +51,8 @@
       "reactCompiler": true
     },
     "extra": {
-      "API_BASE_URL": "http://192.168.100.82:3001/api"
+      "API_BASE_URL": "http://192.168.100.82:3001/api",
+      "WEB_APP_URL": "http://192.168.100.82:5175"
     }
   }
 }
