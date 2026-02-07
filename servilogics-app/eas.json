@@ -1,0 +1,45 @@
+{
+    "cli": {
+        "appVersionSource": "remote",
+        "requireCommit": false
+    },
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "env": {
+                "API_BASE_URL": "http://10.0.13.106:3001/api",
+                "WEB_APP_URL": "http://10.0.13.106:5173"
+            },
+            "android": {
+                "buildType": "apk"
+            },
+            "ios": {
+                "simulator": true
+            }
+        },
+        "preview": {
+            "distribution": "internal",
+            "env": {
+                "API_BASE_URL": "http://10.0.13.106:3001/api",
+                "WEB_APP_URL": "http://10.0.13.106:5173"
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "production": {
+            "autoIncrement": true,
+            "env": {
+                "API_BASE_URL": "https://api.servilogics.com/api",
+                "WEB_APP_URL": "https://app.servilogics.com"
+            },
+            "android": {
+                "buildType": "app-bundle"
+            }
+        }
+    },
+    "submit": {
+        "production": {}
+    }
+}
