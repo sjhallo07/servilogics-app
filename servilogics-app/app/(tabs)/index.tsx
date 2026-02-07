@@ -5,12 +5,14 @@ import { WebView } from 'react-native-webview';
 
 import { ThemedView } from '@/components/themed-view';
 
-const getWebAppUrl = () => {
+const getWebAppUrl = () =>
+{
   const extra = Constants.expoConfig?.extra as { WEB_APP_URL?: string } | undefined;
-  return extra?.WEB_APP_URL ?? 'http://192.168.100.82:5175';
+  return extra?.WEB_APP_URL ?? 'http://10.0.13.106:5173';
 };
 
-export default function HomeScreen() {
+export default function HomeScreen()
+{
   const [loading, setLoading] = useState(true);
   const webAppUrl = getWebAppUrl();
 

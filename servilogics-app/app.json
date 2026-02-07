@@ -53,8 +53,8 @@
       "reactCompiler": true
     },
     "extra": {
-      "API_BASE_URL": "http://192.168.100.145:3001/api",
-      "WEB_APP_URL": "http://192.168.100.145:5173"
+      "API_BASE_URL": "http://10.0.13.106:3001/api",
+      "WEB_APP_URL": "http://10.0.13.106:5173"
     }
   }
 }
