@@ -9,15 +9,7 @@
             "distribution": "internal",
             "env": {
                 "API_BASE_URL": "http://10.0.13.106:3001/api",
-                "WEB_APP_URL": "http://10.0.13.106:5173",
-                "FIREBASE_API_KEY": "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                "FIREBASE_AUTH_DOMAIN": "your-project.firebaseapp.com",
-                "FIREBASE_PROJECT_ID": "your-project-id",
-                "FIREBASE_STORAGE_BUCKET": "your-project.appspot.com",
-                "FIREBASE_MESSAGING_SENDER_ID": "1234567890",
-                "FIREBASE_APP_ID": "1:1234567890:web:abcdef123456",
-                "GOOGLE_MAPS_API_KEY": "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                "DEBUG_MODE": "true"
+                "WEB_APP_URL": "http://10.0.13.106:5173"
             },
             "android": {
                 "buildType": "apk"
@@ -30,15 +22,7 @@
             "distribution": "internal",
             "env": {
                 "API_BASE_URL": "http://10.0.13.106:3001/api",
-                "WEB_APP_URL": "http://10.0.13.106:5173",
-                "FIREBASE_API_KEY": "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                "FIREBASE_AUTH_DOMAIN": "your-project.firebaseapp.com",
-                "FIREBASE_PROJECT_ID": "your-project-id",
-                "FIREBASE_STORAGE_BUCKET": "your-project.appspot.com",
-                "FIREBASE_MESSAGING_SENDER_ID": "1234567890",
-                "FIREBASE_APP_ID": "1:1234567890:web:abcdef123456",
-                "GOOGLE_MAPS_API_KEY": "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                "DEBUG_MODE": "false"
+                "WEB_APP_URL": "http://10.0.13.106:5173"
             },
             "android": {
                 "buildType": "apk"
@@ -48,15 +32,7 @@
             "autoIncrement": true,
             "env": {
                 "API_BASE_URL": "https://api.servilogics.com/api",
-                "WEB_APP_URL": "https://app.servilogics.com",
-                "FIREBASE_API_KEY": "AIzaSyPRODUCTION_KEY_REPLACE_ME",
-                "FIREBASE_AUTH_DOMAIN": "your-production-project.firebaseapp.com",
-                "FIREBASE_PROJECT_ID": "your-production-project-id",
-                "FIREBASE_STORAGE_BUCKET": "your-production-project.appspot.com",
-                "FIREBASE_MESSAGING_SENDER_ID": "0987654321",
-                "FIREBASE_APP_ID": "1:0987654321:web:production123456",
-                "GOOGLE_MAPS_API_KEY": "AIzaSyPRODUCTION_MAPS_KEY_REPLACE_ME",
-                "DEBUG_MODE": "false"
+                "WEB_APP_URL": "https://app.servilogics.com"
             },
             "android": {
                 "buildType": "app-bundle"
