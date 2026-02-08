@@ -72,6 +72,12 @@ export const protectedRoutes: Routes = [
         authority: ['admin'],
     },
     {
+        key: 'adminClients',
+        path: '/admin/clients',
+        component: lazy(() => import('@/views/admin/ClientManagement')),
+        authority: ['admin'],
+    },
+    {
         key: 'inventory',
         path: '/inventory',
         component: lazy(() => import('@/views/inventory')),

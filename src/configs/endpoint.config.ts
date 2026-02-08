@@ -13,6 +13,13 @@ const endpointConfig = {
     settingsContact: '/settings/contact',
     workers: '/workers',
     inventory: '/inventory/items',
+    quotes: '/quotes',
+    jobs: '/jobs',
+    feedback: '/feedback',
+    loyalty: '/loyalty',
+    contact: '/contact',
+    clients: '/clients',
+    clientsImport: '/clients/import',
 }
 
 export default endpointConfig

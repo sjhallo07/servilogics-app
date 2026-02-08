@@ -88,6 +88,139 @@ export const DEFAULT_WORKERS = [
   },
 ];
 
+// ----- Auth seed users -----
+export const DEFAULT_USERS = [
+  {
+    userId: '11',
+    avatar: '',
+    userName: 'Super Admin',
+    email: 'superadmin@ecme.com',
+    authority: ['superadmin', 'admin', 'user'],
+    password: 'SuperAdmin123',
+  },
+  {
+    userId: '21',
+    avatar: '',
+    userName: 'John Doe',
+    email: 'admin-01@ecme.com',
+    authority: ['admin', 'user'],
+    password: '123Qwe',
+  },
+  {
+    userId: '22',
+    avatar: '',
+    userName: 'Sofia',
+    email: 'sofia@ecme.com',
+    authority: ['admin', 'user'],
+    password: 'SofiaAdmin123',
+    canAuthorizeVideo: true,
+  },
+  {
+    userId: '31',
+    avatar: '',
+    userName: 'Client Demo',
+    email: 'client@ecme.com',
+    authority: ['client'],
+    password: 'Client123',
+  },
+];
+
+export const DEFAULT_QUOTES = [
+  { id: 'QT-001', customer: 'John Smith', service: 'AC Repair', status: 'pending', amount: 189.99, date: '2024-01-20' },
+  { id: 'QT-002', customer: 'Sarah Johnson', service: 'Electric Fencing', status: 'reviewed', amount: 449.99, date: '2024-01-19' },
+  { id: 'QT-003', customer: 'Mike Davis', service: 'Surveillance Cameras', status: 'quoted', amount: 599.99, date: '2024-01-18' },
+  { id: 'QT-004', customer: 'Emily Brown', service: 'Painting', status: 'accepted', amount: 299.99, date: '2024-01-17' },
+];
+
+export const DEFAULT_JOBS = [
+  { id: 'JB-001', customer: 'David Wilson', worker: 'Carlos Rodriguez', service: 'AC Installation', status: 'in-progress', progress: 60 },
+  { id: 'JB-002', customer: 'Lisa Anderson', worker: 'Maria Santos', service: 'Painting', status: 'in-progress', progress: 85 },
+  { id: 'JB-003', customer: 'Robert Taylor', worker: 'John Mitchell', service: 'Emergency Repair', status: 'assigned', progress: 0 },
+];
+
+export const DEFAULT_COUPONS = [
+  { id: 'cpn-001', code: 'WELCOME10', discount: 10, validUntil: '2024-03-31', used: false },
+  { id: 'cpn-002', code: 'SUMMER15', discount: 15, validUntil: '2024-06-30', used: false },
+  { id: 'cpn-003', code: 'LOYAL20', discount: 20, validUntil: '2024-02-28', used: true },
+];
+
+export const DEFAULT_LOYALTY = {
+  points: 750,
+  tier: 'Silver',
+  discountPercentage: 10,
+};
+
+export const DEFAULT_CLIENTS = [
+  {
+    id: 'cli-001',
+    firstName: 'Andrea',
+    lastName: 'Gomez',
+    fullName: 'Andrea Gomez',
+    phone: '+1-555-2101',
+    email: 'andrea.gomez@servilogics.com',
+    address: '123 Palm Ave',
+    city: 'Miami',
+    state: 'FL',
+    country: 'USA',
+    zip: '33101',
+    jobTypes: ['preventive-maintenance', 'air-conditioning'],
+    purchases: ['Annual HVAC plan'],
+    invoices: ['INV-1001'],
+    workHistory: [
+      { id: 'job-1001', title: 'AC preventive maintenance', date: '2024-01-12', status: 'completed', amount: 180 },
+    ],
+    lastMaintenanceAt: '2024-01-12',
+    nextMaintenanceAt: '2024-07-12',
+    notes: 'Prefers morning appointments.',
+    attachments: [
+      { type: 'photo', label: 'Unit photo', url: '' },
+    ],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'cli-002',
+    firstName: 'Ricardo',
+    lastName: 'Lopez',
+    fullName: 'Ricardo Lopez',
+    phone: '+1-555-2102',
+    email: 'ricardo.lopez@servilogics.com',
+    address: '89 Ocean Dr',
+    city: 'Tampa',
+    state: 'FL',
+    country: 'USA',
+    zip: '33601',
+    jobTypes: ['surveillance-cameras'],
+    purchases: ['Camera installation'],
+    invoices: ['INV-1002'],
+    workHistory: [
+      { id: 'job-2001', title: 'Camera install', date: '2024-01-05', status: 'completed', amount: 620 },
+    ],
+    lastMaintenanceAt: '2024-01-05',
+    nextMaintenanceAt: '2024-06-05',
+    notes: 'Requested video checkups.',
+    attachments: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+export const DEFAULT_MAINTENANCE = [
+  {
+    id: 'mnt-001',
+    clientId: 'cli-001',
+    serviceType: 'AC preventive maintenance',
+    date: '2024-01-12',
+    technician: 'Maria Santos',
+    status: 'completed',
+    cost: 180,
+    notes: 'Replaced filter, cleaned condenser coil.',
+    nextServiceDate: '2024-07-12',
+    attachments: [],
+    createdAt: new Date().toISOString(),
+  },
+];
+
 export async function connectMongo() {
   if (db) return db;
   client = new MongoClient(uri, {
@@ -254,4 +387,311 @@ export async function upsertSettingDb(key, value) {
     { upsert: true, returnDocument: 'after' },
   );
   return res.value;
+}
+
+// ----- Users collection helpers -----
+
+async function usersCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_USERS || 'users');
+}
+
+async function seedUsersIfEmpty(col) {
+  const count = await col.estimatedDocumentCount();
+  if (count === 0) {
+    await col.insertMany(DEFAULT_USERS);
+  }
+}
+
+export async function getUserByEmailDb(email) {
+  const col = await usersCollection();
+  await seedUsersIfEmpty(col);
+  return col.findOne({ email });
+}
+
+export async function createUserDb(payload) {
+  const col = await usersCollection();
+  const user = {
+    ...payload,
+    userId: payload.userId || `usr-${Date.now()}`,
+    avatar: payload.avatar || '',
+    authority: payload.authority || ['client'],
+  };
+  await col.insertOne(user);
+  return user;
+}
+
+// ----- Quotes collection helpers -----
+
+async function quotesCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_QUOTES || 'quotes');
+}
+
+async function seedQuotesIfEmpty(col) {
+  const count = await col.estimatedDocumentCount();
+  if (count === 0) {
+    await col.insertMany(DEFAULT_QUOTES);
+  }
+}
+
+export async function listQuotesDb() {
+  const col = await quotesCollection();
+  await seedQuotesIfEmpty(col);
+  return col.find({}).toArray();
+}
+
+export async function createQuoteDb(payload) {
+  const col = await quotesCollection();
+  const quote = {
+    id: payload.id || `QT-${Date.now()}`,
+    customer: payload.customer || payload.email || 'Unknown',
+    service: payload.service || 'Custom request',
+    status: payload.status || 'pending',
+    amount: payload.amount || payload.total || 0,
+    date: payload.date || new Date().toISOString().slice(0, 10),
+    items: payload.items || [],
+    details: payload,
+  };
+  await col.insertOne(quote);
+  return quote;
+}
+
+// ----- Jobs collection helpers -----
+
+async function jobsCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_JOBS || 'jobs');
+}
+
+async function seedJobsIfEmpty(col) {
+  const count = await col.estimatedDocumentCount();
+  if (count === 0) {
+    await col.insertMany(DEFAULT_JOBS);
+  }
+}
+
+export async function listJobsDb() {
+  const col = await jobsCollection();
+  await seedJobsIfEmpty(col);
+  return col.find({}).toArray();
+}
+
+export async function createJobDb(payload) {
+  const col = await jobsCollection();
+  const job = {
+    id: payload.id || `JB-${Date.now()}`,
+    customer: payload.customer || 'Unknown',
+    worker: payload.worker || 'Unassigned',
+    service: payload.service || 'Service',
+    status: payload.status || 'assigned',
+    progress: payload.progress ?? 0,
+  };
+  await col.insertOne(job);
+  return job;
+}
+
+// ----- Feedback & loyalty helpers -----
+
+async function feedbackCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_FEEDBACK || 'feedback');
+}
+
+export async function createFeedbackDb(payload) {
+  const col = await feedbackCollection();
+  const feedback = {
+    id: payload.id || `fb-${Date.now()}`,
+    rating: payload.rating,
+    message: payload.message || '',
+    createdAt: new Date().toISOString(),
+  };
+  await col.insertOne(feedback);
+  return feedback;
+}
+
+async function loyaltyCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_LOYALTY || 'loyalty');
+}
+
+export async function getLoyaltyDb() {
+  const col = await loyaltyCollection();
+  const doc = await col.findOne({ key: 'default' });
+  if (!doc) {
+    const seed = { key: 'default', ...DEFAULT_LOYALTY };
+    await col.insertOne(seed);
+    return seed;
+  }
+  return doc;
+}
+
+export async function updateLoyaltyPointsDb(points) {
+  const col = await loyaltyCollection();
+  const res = await col.findOneAndUpdate(
+    { key: 'default' },
+    { $inc: { points }, $setOnInsert: { key: 'default', ...DEFAULT_LOYALTY } },
+    { upsert: true, returnDocument: 'after' },
+  );
+  return res.value;
+}
+
+async function couponsCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_COUPONS || 'coupons');
+}
+
+async function seedCouponsIfEmpty(col) {
+  const count = await col.estimatedDocumentCount();
+  if (count === 0) {
+    await col.insertMany(DEFAULT_COUPONS);
+  }
+}
+
+export async function listCouponsDb() {
+  const col = await couponsCollection();
+  await seedCouponsIfEmpty(col);
+  return col.find({}).toArray();
+}
+
+// ----- Contact messages helpers -----
+
+async function contactsCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_CONTACTS || 'contacts');
+}
+
+export async function createContactMessageDb(payload) {
+  const col = await contactsCollection();
+  const message = {
+    id: payload.id || `contact-${Date.now()}`,
+    name: payload.name,
+    email: payload.email,
+    phone: payload.phone,
+    subject: payload.subject,
+    message: payload.message,
+    createdAt: new Date().toISOString(),
+  };
+  await col.insertOne(message);
+  return message;
+}
+
+// ----- Clients collection helpers -----
+
+async function clientsCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_CLIENTS || 'clients');
+}
+
+async function seedClientsIfEmpty(col) {
+  const count = await col.estimatedDocumentCount();
+  if (count === 0) {
+    await col.insertMany(DEFAULT_CLIENTS);
+  }
+}
+
+function buildClientPayload(payload) {
+  const firstName = payload.firstName || payload.nombre || '';
+  const lastName = payload.lastName || payload.apellido || '';
+  const fullName = payload.fullName || `${firstName} ${lastName}`.trim();
+
+  return {
+    id: payload.id || `cli-${Date.now()}`,
+    firstName,
+    lastName,
+    fullName: fullName || payload.name || payload.nombreCompleto || '',
+    phone: payload.phone || payload.telefono || '',
+    email: payload.email || '',
+    address: payload.address || payload.direccion || '',
+    city: payload.city || '',
+    state: payload.state || '',
+    country: payload.country || '',
+    zip: payload.zip || '',
+    jobTypes: payload.jobTypes || payload.tiposTrabajos || [],
+    purchases: payload.purchases || payload.compras || [],
+    invoices: payload.invoices || payload.facturas || [],
+    workHistory: payload.workHistory || payload.historialTrabajos || [],
+    lastMaintenanceAt: payload.lastMaintenanceAt || payload.ultimoMantenimiento || null,
+    nextMaintenanceAt: payload.nextMaintenanceAt || payload.proximoMantenimiento || null,
+    notes: payload.notes || payload.notas || '',
+    attachments: payload.attachments || [],
+    createdAt: payload.createdAt || new Date().toISOString(),
+    updatedAt: payload.updatedAt || new Date().toISOString(),
+  };
+}
+
+export async function listClientsDb() {
+  const col = await clientsCollection();
+  await seedClientsIfEmpty(col);
+  return col.find({}).toArray();
+}
+
+export async function getClientDb(id) {
+  const col = await clientsCollection();
+  await seedClientsIfEmpty(col);
+  return col.findOne({ id });
+}
+
+export async function createClientDb(payload) {
+  const col = await clientsCollection();
+  const client = buildClientPayload(payload);
+  await col.insertOne(client);
+  return client;
+}
+
+export async function updateClientDb(id, updates) {
+  const col = await clientsCollection();
+  const res = await col.findOneAndUpdate(
+    { id },
+    { $set: { ...updates, updatedAt: new Date().toISOString() } },
+    { returnDocument: 'after' },
+  );
+  return res.value;
+}
+
+export async function createClientsBulkDb(payloads) {
+  const col = await clientsCollection();
+  const records = payloads.map((payload) => buildClientPayload(payload));
+  if (records.length === 0) return [];
+  await col.insertMany(records);
+  return records;
+}
+
+// ----- Maintenance helpers -----
+
+async function maintenanceCollection() {
+  await connectMongo();
+  return getCollection(process.env.MONGODB_COLLECTION_MAINTENANCE || 'maintenance');
+}
+
+async function seedMaintenanceIfEmpty(col) {
+  const count = await col.estimatedDocumentCount();
+  if (count === 0) {
+    await col.insertMany(DEFAULT_MAINTENANCE);
+  }
+}
+
+export async function listClientMaintenanceDb(clientId) {
+  const col = await maintenanceCollection();
+  await seedMaintenanceIfEmpty(col);
+  return col.find({ clientId }).toArray();
+}
+
+export async function createClientMaintenanceDb(clientId, payload) {
+  const col = await maintenanceCollection();
+  const entry = {
+    id: payload.id || `mnt-${Date.now()}`,
+    clientId,
+    serviceType: payload.serviceType || payload.tipoServicio || 'Maintenance',
+    date: payload.date || new Date().toISOString().slice(0, 10),
+    technician: payload.technician || payload.tecnico || '',
+    status: payload.status || 'completed',
+    cost: payload.cost || payload.costo || 0,
+    notes: payload.notes || payload.notas || '',
+    nextServiceDate: payload.nextServiceDate || payload.proximoServicio || null,
+    attachments: payload.attachments || [],
+    createdAt: new Date().toISOString(),
+  };
+  await col.insertOne(entry);
+  return entry;
 }

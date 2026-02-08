@@ -1,6 +1,5 @@
 import type { Service, ServiceCategory, ServiceSector } from '@/@types/services'
 import Button from '@/components/ui/Button'
-import { servicesData } from '@/data/services.data'
 import { getServices } from '@/services/ServicesService'
 import { useCartStore } from '@/store/cartStore'
 import { useCurrencyStore } from '@/store/currencyStore'
@@ -146,7 +145,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
 }
 
 const Services = () => {
-    const [services, setServices] = useState<Service[]>(servicesData)
+    const [services, setServices] = useState<Service[]>([])
     const [loadingServices, setLoadingServices] = useState(true)
     const [servicesError, setServicesError] = useState<string | null>(null)
     const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | 'all'>('all')
@@ -168,7 +167,7 @@ const Services = () => {
         const loadServices = async () => {
             try {
                 const apiServices = await getServices()
-                if (!cancelled && Array.isArray(apiServices) && apiServices.length > 0) {
+                if (!cancelled && Array.isArray(apiServices)) {
                     setServices(apiServices)
                 }
             }
@@ -291,6 +290,16 @@ const Services = () => {
 
             {/* Filters */}
             <div className="mb-8">
+                {loadingServices && (
+                    <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        Loading services...
+                    </div>
+                )}
+                {servicesError && (
+                    <div className="mb-4 text-sm text-red-600 dark:text-red-400">
+                        {servicesError}
+                    </div>
+                )}
                 <div className="flex items-center gap-2 mb-4">
                     <PiFunnelDuotone className="w-5 h-5 text-gray-500" />
                     <span className="font-medium text-gray-700 dark:text-gray-300">Filter Services</span>

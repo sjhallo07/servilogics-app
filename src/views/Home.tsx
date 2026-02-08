@@ -2,7 +2,6 @@ import type { Service } from '@/@types/services'
 import HealthStatus from '@/components/shared/HealthStatus'
 import Button from '@/components/ui/Button'
 import AdminContactBlock from '@/components/shared/AdminContactBlock'
-import { servicesData } from '@/data/services.data'
 import { getServices } from '@/services/ServicesService'
 import { useCurrencyStore } from '@/store/currencyStore'
 import { motion } from 'framer-motion'
@@ -93,7 +92,7 @@ const stats = [
 const Home = () =>
 {
     const formatPrice = useCurrencyStore((state) => state.formatPrice)
-    const [featuredServices, setFeaturedServices] = useState<Service[]>(servicesData.slice(0, 3))
+    const [featuredServices, setFeaturedServices] = useState<Service[]>([])
     const [loadingFeatured, setLoadingFeatured] = useState(true)
     const [featuredError, setFeaturedError] = useState<string | null>(null)
     const [active, setActive] = useState(0)
@@ -112,7 +111,7 @@ const Home = () =>
         const loadFeatured = async () => {
             try {
                 const services = await getServices()
-                if (!cancelled && Array.isArray(services) && services.length > 0) {
+                if (!cancelled && Array.isArray(services)) {
                     setFeaturedServices(services.slice(0, 3))
                 }
             }
@@ -353,6 +352,16 @@ const Home = () =>
                         </Button>
                     </Link>
                 </div>
+                {loadingFeatured && (
+                    <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        Loading featured services...
+                    </div>
+                )}
+                {featuredError && (
+                    <div className="mb-4 text-sm text-red-600 dark:text-red-400">
+                        {featuredError}
+                    </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {featuredServices.map((service, index) => (
                         <motion.div

@@ -16,6 +16,7 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Alert from '@/components/ui/Alert'
 import useAdminContacts from '@/hooks/useAdminContacts'
+import ContactService from '@/services/ContactService'
 
 const Contact = () => {
     const { contactNumbers } = useAdminContacts()
@@ -72,15 +73,14 @@ const Contact = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
-
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        setIsSubmitting(false)
-        setIsSuccess(true)
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
-
-        setTimeout(() => setIsSuccess(false), 5000)
+        try {
+            await ContactService.submitContact(formData)
+            setIsSuccess(true)
+            setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+            setTimeout(() => setIsSuccess(false), 5000)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     return (

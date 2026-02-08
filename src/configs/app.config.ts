@@ -14,7 +14,7 @@ const appConfig: AppConfig = {
     // Primary UI language (Spanish). English remains available as secondary/fallback.
     locale: 'es',
     accessTokenPersistStrategy: 'cookies',
-    enableMock: import.meta.env.VITE_ENABLE_MOCK === 'false' ? false : true,
+    enableMock: import.meta.env.VITE_ENABLE_MOCK === 'true',
 }
 
 export default appConfig

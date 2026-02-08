@@ -14,6 +14,7 @@ import { useCurrencyStore } from '@/store/currencyStore'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Alert from '@/components/ui/Alert'
+import QuotesService from '@/services/QuotesService'
 
 const QuoteRequest = () => {
     const navigate = useNavigate()
@@ -39,18 +40,34 @@ const QuoteRequest = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
+        try {
+            await QuotesService.submitQuote({
+                items: items.map((item) => ({
+                    serviceId: item.service.id,
+                    name: item.service.name,
+                    quantity: item.quantity,
+                    unitPrice: item.service.basePrice,
+                })),
+                total: getTotalPrice(),
+                address: formData.address,
+                phone: formData.phone,
+                email: formData.email,
+                inspectionDate: formData.inspectionDate,
+                inspectionTime: formData.inspectionTime,
+                notes: formData.notes,
+                needsInspection: formData.needsInspection,
+            })
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+            setIsSuccess(true)
 
-        setIsSubmitting(false)
-        setIsSuccess(true)
-
-        // Clear cart after successful submission
-        setTimeout(() => {
-            clearCart()
-            navigate('/home')
-        }, 3000)
+            // Clear cart after successful submission
+            setTimeout(() => {
+                clearCart()
+                navigate('/home')
+            }, 3000)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     if (items.length === 0 && !isSuccess) {

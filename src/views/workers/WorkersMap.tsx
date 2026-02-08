@@ -6,9 +6,9 @@ import
         PiEnvelopeDuotone,
         PiStarFill,
     } from 'react-icons/pi'
-import { workersData } from '@/data/services.data'
 import Button from '@/components/ui/Button'
 import AdminContactBlock from '@/components/shared/AdminContactBlock'
+import WorkerService from '@/services/WorkerService'
 import type { Worker } from '@/@types/services'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 
@@ -90,17 +90,41 @@ const WorkerCard = ({ worker, isSelected, onSelect }: { worker: Worker; isSelect
 
 const WorkersMap = () =>
 {
+    const [workers, setWorkers] = useState<Worker[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null)
     const [selectedZone, setSelectedZone] = useState<string>('all')
     const mapRef = useRef<HTMLDivElement>(null)
     const [mapInstance, setMapInstance] = useState<LeafletMap | null>(null)
     const markersRef = useRef<Marker[]>([])
 
-    const zones = [...new Set(workersData.map(w => w.zone))]
+    const zones = [...new Set(workers.map(w => w.zone))]
 
-    const filteredWorkers = workersData.filter(
+    const filteredWorkers = workers.filter(
         (worker) => selectedZone === 'all' || worker.zone === selectedZone
     )
+
+    useEffect(() => {
+        const loadWorkers = async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const response = await WorkerService.getWorkers()
+                if (response?.success) {
+                    setWorkers(response.data || [])
+                } else {
+                    setError(response?.error || 'Failed to load workers')
+                }
+            } catch (err) {
+                setError((err as Error)?.message || 'Failed to load workers')
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        void loadWorkers()
+    }, [])
 
     useEffect(() =>
     {
@@ -206,6 +230,17 @@ const WorkersMap = () =>
                     Browse available service workers by zone
                 </p>
             </div>
+
+            {loading && (
+                <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    Loading workers...
+                </div>
+            )}
+            {error && (
+                <div className="mb-4 text-sm text-red-600 dark:text-red-400">
+                    {error}
+                </div>
+            )}
 
             <div className="mb-6">
                 <AdminContactBlock

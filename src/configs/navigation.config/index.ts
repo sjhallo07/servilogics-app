@@ -117,6 +117,16 @@ const navigationConfig: NavigationTree[] = [
                 authority: ['admin'],
                 subMenu: [],
             },
+            {
+                key: 'adminMenu.clients',
+                path: '/admin/clients',
+                title: 'Clients & History',
+                translateKey: 'nav.adminMenu.clients',
+                icon: 'users',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: ['admin'],
+                subMenu: [],
+            },
         ],
     },
     {

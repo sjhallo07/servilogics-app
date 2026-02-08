@@ -30,6 +30,7 @@ import inventoryRouter from './routes/inventory.js'
 import servicesRouter from './routes/services.js'
 import workersRouter from './routes/workers.js'
 import settingsRouter from './routes/settings.js'
+import clientsRouter from './routes/clients.js'
 
 dotenv.config()
 
@@ -46,6 +47,7 @@ app.use('/api/inventory', inventoryRouter)
 app.use('/api/services', servicesRouter)
 app.use('/api/workers', workersRouter)
 app.use('/api/settings', settingsRouter)
+app.use('/api/clients', clientsRouter)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -55,15 +57,6 @@ app.get('/api/health', (req, res) => {
         version: '1.0.0',
         timestamp: new Date().toISOString(),
     })
-})
-
-// Placeholder routes - to be implemented
-app.get('/api/workers', (req, res) => {
-    res.json({ message: 'Workers endpoint - Coming soon' })
-})
-
-app.post('/api/quotes', (req, res) => {
-    res.json({ message: 'Quote creation endpoint - Coming soon' })
 })
 
 // Inventory routes are handled by inventoryRouter (see above)

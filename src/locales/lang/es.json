@@ -13,7 +13,8 @@
             "adminMenu": "Administrador",
             "dashboard": "Panel de Administración",
             "inventory": "Inventario",
-            "settings": "Configuración de Administrador"
+            "settings": "Configuración de Administrador",
+            "clients": "Clientes e Historial"
         },
         "infoMenu": {
             "infoMenu": "Información",

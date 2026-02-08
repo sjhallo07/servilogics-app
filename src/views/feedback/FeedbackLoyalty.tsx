@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
     PiStarDuotone,
@@ -11,18 +11,13 @@ import {
 } from 'react-icons/pi'
 import Button from '@/components/ui/Button'
 import Alert from '@/components/ui/Alert'
+import FeedbackService, { type LoyaltyProfile } from '@/services/FeedbackService'
 
 const tiers = [
     { name: 'Bronze', minPoints: 0, discount: 5, icon: PiTrophyDuotone, color: 'text-amber-700 bg-amber-100 dark:bg-amber-900/30' },
     { name: 'Silver', minPoints: 500, discount: 10, icon: PiTrophyDuotone, color: 'text-gray-500 bg-gray-100 dark:bg-gray-700' },
     { name: 'Gold', minPoints: 1000, discount: 15, icon: PiTrophyDuotone, color: 'text-yellow-500 bg-yellow-100 dark:bg-yellow-900/30' },
     { name: 'Platinum', minPoints: 2500, discount: 20, icon: PiCrownDuotone, color: 'text-purple-500 bg-purple-100 dark:bg-purple-900/30' },
-]
-
-const mockCoupons = [
-    { id: 'cpn-001', code: 'WELCOME10', discount: 10, validUntil: '2024-03-31', used: false },
-    { id: 'cpn-002', code: 'SUMMER15', discount: 15, validUntil: '2024-06-30', used: false },
-    { id: 'cpn-003', code: 'LOYAL20', discount: 20, validUntil: '2024-02-28', used: true },
 ]
 
 const FeedbackLoyalty = () => {
@@ -32,12 +27,32 @@ const FeedbackLoyalty = () => {
     const [feedbackText, setFeedbackText] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
+    const [loyalty, setLoyalty] = useState<LoyaltyProfile | null>(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
-    // Mock user loyalty data
-    const userLoyalty = {
-        points: 750,
-        tier: 'Silver',
-        discountPercentage: 10,
+    useEffect(() => {
+        const loadLoyalty = async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const data = await FeedbackService.getLoyalty()
+                setLoyalty(data)
+            } catch (err) {
+                setError((err as Error)?.message || 'Failed to load loyalty data')
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        void loadLoyalty()
+    }, [])
+
+    const userLoyalty = loyalty || {
+        points: 0,
+        tier: 'Bronze',
+        discountPercentage: 5,
+        coupons: [],
     }
 
     const currentTierIndex = tiers.findIndex(t => t.name === userLoyalty.tier)
@@ -47,15 +62,23 @@ const FeedbackLoyalty = () => {
     const handleSubmitFeedback = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
+        setError(null)
 
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        setIsSubmitting(false)
-        setIsSuccess(true)
-        setRating(0)
-        setFeedbackText('')
-
-        setTimeout(() => setIsSuccess(false), 5000)
+        try {
+            const updated = await FeedbackService.submitFeedback({
+                rating,
+                message: feedbackText,
+            })
+            setLoyalty(updated)
+            setIsSuccess(true)
+            setRating(0)
+            setFeedbackText('')
+            setTimeout(() => setIsSuccess(false), 5000)
+        } catch (err) {
+            setError((err as Error)?.message || 'Failed to submit feedback')
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -68,6 +91,17 @@ const FeedbackLoyalty = () => {
                     Share your experience and earn rewards
                 </p>
             </div>
+
+            {loading && (
+                <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    Loading loyalty data...
+                </div>
+            )}
+            {error && (
+                <div className="mb-4 text-sm text-red-600 dark:text-red-400">
+                    {error}
+                </div>
+            )}
 
             {/* Tabs */}
             <div className="flex gap-2 mb-8">
@@ -184,7 +218,7 @@ const FeedbackLoyalty = () => {
                             Your Coupons
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {mockCoupons.map((coupon) => (
+                            {userLoyalty.coupons.map((coupon) => (
                                 <div
                                     key={coupon.id}
                                     className={`relative border-2 border-dashed rounded-xl p-4 ${

@@ -1,8 +1,8 @@
-import { workersData } from '@/data/services.data'
 import { useSessionUser } from '@/store/authStore'
 import { motion } from 'framer-motion'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
+import type { Worker } from '@/@types/services'
 import {
     PiCheckCircleDuotone,
     PiClipboardTextDuotone,
@@ -15,8 +15,11 @@ import {
     PiWarningDuotone
 } from 'react-icons/pi'
 import AdminContactBlock from '@/components/shared/AdminContactBlock'
+import WorkerService from '@/services/WorkerService'
+import QuotesService, { type Quote } from '@/services/QuotesService'
+import JobsService, { type Job } from '@/services/JobsService'
 
-const AdminWorkersMap = () => {
+const AdminWorkersMap = ({ workers }: { workers: Worker[] }) => {
     const mapRef = useRef<HTMLDivElement>(null)
     const mapInstanceRef = useRef<LeafletMap | null>(null)
     const markersRef = useRef<Marker[]>([])
@@ -64,7 +67,7 @@ const AdminWorkersMap = () => {
                 userMarkerRef.current = null
             }
 
-            workersData.forEach((worker) => {
+            workers.forEach((worker) => {
                 if (!worker.currentLocation) return
 
                 const markerColor =
@@ -153,7 +156,7 @@ const AdminWorkersMap = () => {
         }
 
         renderMarkers()
-    }, [userLocation])
+    }, [userLocation, workers])
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -445,21 +448,40 @@ const StatCard = ({
 
 const AdminDashboard = () => {
     const [selectedTab, setSelectedTab] = useState<'overview' | 'workers' | 'quotes' | 'jobs'>('overview')
+    const [workers, setWorkers] = useState<Worker[]>([])
+    const [quotes, setQuotes] = useState<Quote[]>([])
+    const [jobs, setJobs] = useState<Job[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
-    // Mock data for quotes
-    const recentQuotes = [
-        { id: 'QT-001', customer: 'John Smith', service: 'AC Repair', status: 'pending', amount: 189.99, date: '2024-01-20' },
-        { id: 'QT-002', customer: 'Sarah Johnson', service: 'Electric Fencing', status: 'reviewed', amount: 449.99, date: '2024-01-19' },
-        { id: 'QT-003', customer: 'Mike Davis', service: 'Surveillance Cameras', status: 'quoted', amount: 599.99, date: '2024-01-18' },
-        { id: 'QT-004', customer: 'Emily Brown', service: 'Painting', status: 'accepted', amount: 299.99, date: '2024-01-17' },
-    ]
+    useEffect(() => {
+        const loadDashboardData = async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const [workersResponse, quoteResponse, jobResponse] = await Promise.all([
+                    WorkerService.getWorkers(),
+                    QuotesService.getQuotes(),
+                    JobsService.getJobs(),
+                ])
 
-    // Mock data for active jobs
-    const activeJobs = [
-        { id: 'JB-001', customer: 'David Wilson', worker: 'Carlos Rodriguez', service: 'AC Installation', status: 'in-progress', progress: 60 },
-        { id: 'JB-002', customer: 'Lisa Anderson', worker: 'Maria Santos', service: 'Painting', status: 'in-progress', progress: 85 },
-        { id: 'JB-003', customer: 'Robert Taylor', worker: 'John Mitchell', service: 'Emergency Repair', status: 'assigned', progress: 0 },
-    ]
+                if (workersResponse?.success) {
+                    setWorkers(workersResponse.data || [])
+                } else {
+                    setError(workersResponse?.error || 'Failed to load workers')
+                }
+
+                setQuotes(quoteResponse || [])
+                setJobs(jobResponse || [])
+            } catch (err) {
+                setError((err as Error)?.message || 'Failed to load dashboard data')
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        void loadDashboardData()
+    }, [])
 
     const statusColors: Record<string, string> = {
         pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
@@ -495,6 +517,17 @@ const AdminDashboard = () => {
                     description="Use these numbers for urgent requests from clients, staff, and enterprise users."
                 />
             </div>
+
+            {loading && (
+                <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    Loading dashboard data...
+                </div>
+            )}
+            {error && (
+                <div className="mb-4 text-sm text-red-600 dark:text-red-400">
+                    {error}
+                </div>
+            )}
 
             {/* Tabs */}
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -554,7 +587,7 @@ const AdminDashboard = () => {
                                 Recent Quotes
                             </h2>
                             <div className="space-y-4">
-                                {recentQuotes.slice(0, 4).map((quote) => (
+                                {quotes.slice(0, 4).map((quote) => (
                                     <div
                                         key={quote.id}
                                         className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
@@ -587,7 +620,7 @@ const AdminDashboard = () => {
                                 Active Jobs
                             </h2>
                             <div className="space-y-4">
-                                {activeJobs.map((job) => (
+                                {jobs.map((job) => (
                                     <div
                                         key={job.id}
                                         className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
@@ -635,7 +668,7 @@ const AdminDashboard = () => {
                         </h2>
                         <div className="flex items-center gap-4">
                             <span className="text-sm text-gray-500 dark:text-gray-400">
-                                {workersData.filter(w => w.availability === 'available').length} available
+                                {workers.filter(w => w.availability === 'available').length} available
                             </span>
                         </div>
                     </div>
@@ -653,7 +686,7 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {workersData.map((worker) => (
+                                {workers.map((worker) => (
                                     <tr
                                         key={worker.id}
                                         className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -712,7 +745,7 @@ const AdminDashboard = () => {
                     </div>
 
                     <div className="mt-8">
-                        <AdminWorkersMap />
+                        <AdminWorkersMap workers={workers} />
                     </div>
                 </div>
             )}
@@ -736,7 +769,7 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {recentQuotes.map((quote) => (
+                                {quotes.map((quote) => (
                                     <tr
                                         key={quote.id}
                                         className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -772,16 +805,16 @@ const AdminDashboard = () => {
                         </h2>
                         <div className="flex items-center gap-4 text-sm">
                             <span className="flex items-center gap-1 text-yellow-600">
-                                <PiClockDuotone /> {activeJobs.filter(j => j.status === 'assigned').length} Assigned
+                                <PiClockDuotone /> {jobs.filter(j => j.status === 'assigned').length} Assigned
                             </span>
                             <span className="flex items-center gap-1 text-blue-600">
-                                <PiWarningDuotone /> {activeJobs.filter(j => j.status === 'in-progress').length} In Progress
+                                <PiWarningDuotone /> {jobs.filter(j => j.status === 'in-progress').length} In Progress
                             </span>
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        {activeJobs.map((job) => (
+                        {jobs.map((job) => (
                             <motion.div
                                 key={job.id}
                                 className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"
