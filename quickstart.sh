@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND_DIR="$ROOT_DIR/backend"
 FRONTEND_PORT="${FRONTEND_PORT:-5173}"
 BACKEND_PORT="${PORT:-3001}"
+LOG_DIR="$ROOT_DIR/.logs"
 NO_INSTALL=false
 BACKEND_ONLY=false
 FRONTEND_ONLY=false
@@ -61,6 +62,10 @@ check_node_version() {
 echo "📋 Checking prerequisites..."
 require_cmd node
 require_cmd npm
+require_cmd bash
+require_cmd lsof
+require_cmd curl
+require_cmd grep
 check_node_version
 echo "✅ Node.js $(node -v)"
 echo "✅ npm $(npm -v)"
@@ -120,15 +125,17 @@ echo "🚀 Starting Development Servers"
 echo "========================================="
 echo ""
 
+mkdir -p "$LOG_DIR"
+
 if [ "$FRONTEND_ONLY" = false ]; then
     echo "🔧 Backend API starting on port $BACKEND_PORT..."
-    PORT="$BACKEND_PORT" npm start --prefix "$BACKEND_DIR" > "$ROOT_DIR/.backend.log" 2>&1 &
+    PORT="$BACKEND_PORT" npm start --prefix "$BACKEND_DIR" > "$LOG_DIR/backend.log" 2>&1 &
     BACKEND_PID=$!
     sleep 2
     if ps -p "$BACKEND_PID" >/dev/null 2>&1; then
         echo "✅ Backend running (PID: $BACKEND_PID)"
     else
-        echo "❌ Backend failed to start. Check $ROOT_DIR/.backend.log"
+        echo "❌ Backend failed to start. Check $LOG_DIR/backend.log"
         exit 1
     fi
 fi
@@ -146,7 +153,7 @@ echo "💡 Tip: Allow location access when prompted"
 echo ""
 echo "📱 Mobile apps (run in separate terminals):"
 echo "  Classic Expo app:   cd mobile-app && npx expo start"
-echo "  Expo Router app:    cd servilogics-app/servilogics-app && npx expo start"
+echo "  Expo Router app:    cd servilogics-app && npx expo start"
 echo ""
 echo "🛑 Press Ctrl+C to stop all services"
 echo ""

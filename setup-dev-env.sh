@@ -19,8 +19,9 @@ NC='\033[0m' # No Color
 PROJECT_NAME="Ecme-lite-cesar"
 PROJECT_DIR="$(pwd)"
 BACKEND_PORT=3001
-FRONTEND_PORT=5175
+FRONTEND_PORT=5173
 DATABASE_PORT=5432
+FORCE_SCRIPTS=false
 
 # ============================================
 # Utility Functions
@@ -393,6 +394,11 @@ EOF
 
 create_utility_scripts() {
     print_header "5. Creating Utility Scripts"
+
+    if [ "$FORCE_SCRIPTS" = false ] && { [ -f "start-dev.sh" ] || [ -f "stop-dev.sh" ] || [ -f "test-maps.sh" ] || [ -f "copilot-helper.sh" ]; }; then
+        print_warning "Utility scripts already exist. Skipping overwrite (use --force-scripts to regenerate)."
+        return
+    fi
     
     # Startup script
     cat > start-dev.sh << 'EOF'
@@ -407,7 +413,7 @@ NC='\033[0m'
 # Kill processes on ports if they exist
 cleanup_ports() {
     lsof -ti:3001 | xargs kill -9 2>/dev/null || true
-    lsof -ti:5175 | xargs kill -9 2>/dev/null || true
+    lsof -ti:5173 | xargs kill -9 2>/dev/null || true
 }
 
 cleanup_ports
@@ -425,8 +431,8 @@ fi
 sleep 2
 
 # Start frontend
-echo "Starting frontend on port 5175..."
-npm run dev > /tmp/frontend.log 2>&1 &
+echo "Starting frontend on port 5173..."
+npm run dev -- --port 5173 > /tmp/frontend.log 2>&1 &
 FRONTEND_PID=$!
 echo -e "${GREEN}✓${NC} Frontend PID: $FRONTEND_PID"
 
@@ -436,9 +442,9 @@ sleep 3
 # Show status
 echo ""
 echo "📊 Development Dashboards:"
-echo -e "   ${GREEN}✓${NC} Admin:    http://localhost:5175/admin/workers-map"
-echo -e "   ${GREEN}✓${NC} Staff:    http://localhost:5175/staff/workers"
-echo -e "   ${GREEN}✓${NC} Client:   http://localhost:5175/find-workers"
+echo -e "   ${GREEN}✓${NC} Admin:    http://localhost:5173/admin/workers-map"
+echo -e "   ${GREEN}✓${NC} Staff:    http://localhost:5173/staff/workers"
+echo -e "   ${GREEN}✓${NC} Client:   http://localhost:5173/find-workers"
 echo -e "   ${GREEN}✓${NC} Backend:  http://localhost:3001/api"
 echo ""
 echo "📝 Logs:"
@@ -459,7 +465,7 @@ EOF
 echo "🛑 Stopping services..."
 
 lsof -ti:3001 | xargs kill -9 2>/dev/null || true
-lsof -ti:5175 | xargs kill -9 2>/dev/null || true
+lsof -ti:5173 | xargs kill -9 2>/dev/null || true
 
 echo "✅ All services stopped"
 EOF
@@ -488,7 +494,7 @@ fi
 
 # Test Frontend
 echo "3. Checking Frontend..."
-if curl -s http://localhost:5175 > /dev/null; then
+if curl -s http://localhost:5173 > /dev/null; then
     echo "✅ Frontend server running"
 else
     echo "❌ Frontend server not responding"
@@ -496,7 +502,7 @@ fi
 
 echo ""
 echo "📋 Manual Tests:"
-echo "1. Open http://localhost:5175/find-workers"
+echo "1. Open http://localhost:5173/find-workers"
 echo "2. Allow geolocation permission"
 echo "3. Verify map loads with markers"
 echo "4. Test zone filter"
@@ -562,9 +568,9 @@ show_next_steps() {
    ./start-dev.sh
 
 2. 📱 Access the Application:
-   • Admin:    http://localhost:5175/admin/workers-map
-   • Staff:    http://localhost:5175/staff/workers
-   • Client:   http://localhost:5175/find-workers
+    • Admin:    http://localhost:5173/admin/workers-map
+    • Staff:    http://localhost:5173/staff/workers
+    • Client:   http://localhost:5173/find-workers
    • API:      http://localhost:3001/api/workers
 
 3. 🧪 Test Everything:
@@ -585,7 +591,7 @@ show_next_steps() {
    ./stop-dev.sh
 
 📚 Useful Resources:
-   • Maps Guide:        MAPS_DASHBOARD_GUIDE.md
+    • Maps Guide:        MAPS_DASHBOARD_GUIDE.md
    • Copilot Prompts:   .copilot-prompts.md
    • API Reference:     MAP_DATA_IMPLEMENTATION.md
    • Integration:       INTEGRATION_GUIDE.md
@@ -612,6 +618,7 @@ Usage: ./setup-dev-env.sh [OPTION]
 
 Options:
   --quick    Skip Copilot setup (faster)
+    --force-scripts  Overwrite start/stop/test scripts
   --help, -h Show this help message
   (default)  Full setup with Copilot
 
@@ -628,6 +635,10 @@ EOF
         setup_environment
         create_utility_scripts
         show_next_steps
+        ;;
+    "--force-scripts")
+        FORCE_SCRIPTS=true
+        setup_development_environment
         ;;
     *)
         setup_development_environment
