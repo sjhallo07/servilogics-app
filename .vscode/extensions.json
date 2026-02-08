@@ -15,6 +15,7 @@
         "vscjava.vscode-java-upgrade",
         "vscjava.vscode-gradle",
         "vscjava.vscode-maven",
-        "ms-vscode.powershell"
+        "ms-vscode.powershell",
+        "github.copilot-chat"
     ]
 }
