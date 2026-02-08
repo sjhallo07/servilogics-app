@@ -33,3 +33,10 @@ backend/uploads/
 *.sln
 *.sw?
 .vite-cache/
+
+# Cleanup: local-only generated/untracked files
+mobile-app/.idx/
+mobile-app/capacitor.config.ts
+mobile-app/tsconfig.json
+src/app/
+src/modules/
