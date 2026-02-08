@@ -1,5 +1,5 @@
 {
-  "project": "servilogic-app",
+  "project": "servilogics-app",
   "context": {
     "framework": "React + Node.js + Express",
     "features": [
