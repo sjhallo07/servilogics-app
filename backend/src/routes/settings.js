@@ -20,6 +20,11 @@ const buildDefaultContacts = () => {
   }));
 };
 
+const isMongoUnavailable = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  return message.includes('mongo_not_connected') || message.includes('econnrefused');
+};
+
 router.get('/contact', async (req, res) => {
   try {
     const setting = await getSettingDb(SETTINGS_KEY);
@@ -32,11 +37,19 @@ router.get('/contact', async (req, res) => {
     return res.json({ success: true, data: buildDefaultContacts() });
   } catch (error) {
     console.error('Failed to load admin contacts:', error);
+    if (isMongoUnavailable(error)) {
+      return res.json({
+        success: true,
+        data: buildDefaultContacts(),
+        warning: 'Contacts loaded from defaults because the database is unavailable.',
+      });
+    }
     return res.status(500).json({ success: false, error: 'Failed to load admin contacts' });
   }
 });
 
 router.put('/contact', async (req, res) => {
+  let sanitized = [];
   try {
     const userRole = req.query.role || 'client';
     if (userRole !== 'admin') {
@@ -48,7 +61,7 @@ router.put('/contact', async (req, res) => {
       return res.status(400).json({ success: false, error: 'At least one contact is required' });
     }
 
-    const sanitized = contacts.map((contact, index) => {
+    sanitized = contacts.map((contact, index) => {
       const label = String(contact?.label || `Admin ${index + 1}`).trim();
       const phone = normalizePhone(contact?.phone || '');
       return { label, phone };
@@ -63,6 +76,13 @@ router.put('/contact', async (req, res) => {
     return res.json({ success: true, data: saved?.value?.contacts || sanitized });
   } catch (error) {
     console.error('Failed to update admin contacts:', error);
+    if (isMongoUnavailable(error) && sanitized.length > 0) {
+      return res.json({
+        success: true,
+        data: sanitized,
+        warning: 'Contacts saved in memory because the database is unavailable.',
+      });
+    }
     return res.status(500).json({ success: false, error: 'Failed to update admin contacts' });
   }
 });

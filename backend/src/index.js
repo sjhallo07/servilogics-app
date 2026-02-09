@@ -25,6 +25,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import authRouter from './routes/auth.js'
 import agentRouter from './routes/agent.js'
 import inventoryRouter from './routes/inventory.js'
 import servicesRouter from './routes/services.js'
@@ -32,16 +33,18 @@ import workersRouter from './routes/workers.js'
 import settingsRouter from './routes/settings.js'
 import clientsRouter from './routes/clients.js'
 
-dotenv.config()
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: path.join(__dirname, '../.env') })
+dotenv.config({ path: path.join(__dirname, '../.env.local'), override: true })
 
 const app = express()
 const PORT = process.env.PORT || 3001
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Middleware
 app.use(cors())
 app.use(express.json({ limit: '1mb' }))
 app.use(express.static(path.join(__dirname, '../uploads')))
+app.use('/api', authRouter)
 app.use('/api', agentRouter)
 app.use('/api/inventory', inventoryRouter)
 app.use('/api/services', servicesRouter)

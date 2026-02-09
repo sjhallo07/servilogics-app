@@ -1,10 +1,18 @@
 import dotenv from 'dotenv';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { MongoClient } from 'mongodb';
+import { hashPassword, isHashedPassword } from './security.js';
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config({ path: path.join(__dirname, '../../.env.local'), override: true });
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const dbName = process.env.MONGODB_DB_NAME || 'ecme_lite';
+
+const usersFilePath = path.resolve(__dirname, '../../data/users.json');
 
 let client;
 let db;
@@ -124,6 +132,49 @@ export const DEFAULT_USERS = [
     password: 'Client123',
   },
 ];
+
+const normalizeEmail = (email = '') => String(email || '').trim().toLowerCase();
+
+const ensureUserPasswordHashed = async (user) => {
+  if (!user?.password || isHashedPassword(user.password)) {
+    return { ...user, email: normalizeEmail(user.email) };
+  }
+  return {
+    ...user,
+    email: normalizeEmail(user.email),
+    password: await hashPassword(user.password),
+  };
+};
+
+const readLocalUsers = async () => {
+  try {
+    const raw = await fs.readFile(usersFilePath, 'utf-8');
+    const data = JSON.parse(raw);
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      await fs.mkdir(path.dirname(usersFilePath), { recursive: true });
+      await fs.writeFile(usersFilePath, '[]', 'utf-8');
+      return [];
+    }
+    throw error;
+  }
+};
+
+const writeLocalUsers = async (users) => {
+  await fs.mkdir(path.dirname(usersFilePath), { recursive: true });
+  await fs.writeFile(usersFilePath, JSON.stringify(users, null, 2), 'utf-8');
+};
+
+const ensureLocalUsersSeeded = async () => {
+  const users = await readLocalUsers();
+  if (users.length > 0) {
+    return users;
+  }
+  const seeded = await Promise.all(DEFAULT_USERS.map(ensureUserPasswordHashed));
+  await writeLocalUsers(seeded);
+  return seeded;
+};
 
 export const DEFAULT_QUOTES = [
   { id: 'QT-001', customer: 'John Smith', service: 'AC Repair', status: 'pending', amount: 189.99, date: '2024-01-20' },
@@ -399,26 +450,43 @@ async function usersCollection() {
 async function seedUsersIfEmpty(col) {
   const count = await col.estimatedDocumentCount();
   if (count === 0) {
-    await col.insertMany(DEFAULT_USERS);
+    const seeded = await Promise.all(DEFAULT_USERS.map(ensureUserPasswordHashed));
+    await col.insertMany(seeded);
   }
 }
 
 export async function getUserByEmailDb(email) {
-  const col = await usersCollection();
-  await seedUsersIfEmpty(col);
-  return col.findOne({ email });
+  const normalizedEmail = normalizeEmail(email);
+  try {
+    const col = await usersCollection();
+    await seedUsersIfEmpty(col);
+    return col.findOne({ email: normalizedEmail });
+  } catch (error) {
+    const localUsers = await ensureLocalUsersSeeded();
+    return localUsers.find((user) => normalizeEmail(user.email) === normalizedEmail);
+  }
 }
 
 export async function createUserDb(payload) {
-  const col = await usersCollection();
-  const user = {
+  const baseUser = {
     ...payload,
+    email: normalizeEmail(payload.email),
     userId: payload.userId || `usr-${Date.now()}`,
     avatar: payload.avatar || '',
     authority: payload.authority || ['client'],
   };
-  await col.insertOne(user);
-  return user;
+  const user = await ensureUserPasswordHashed(baseUser);
+
+  try {
+    const col = await usersCollection();
+    await col.insertOne(user);
+    return user;
+  } catch (error) {
+    const localUsers = await ensureLocalUsersSeeded();
+    const nextUsers = [...localUsers, user];
+    await writeLocalUsers(nextUsers);
+    return user;
+  }
 }
 
 // ----- Quotes collection helpers -----

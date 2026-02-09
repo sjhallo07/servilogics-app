@@ -1,0 +1,47 @@
+[
+  {
+    "userId": "11",
+    "avatar": "",
+    "userName": "Super Admin",
+    "email": "superadmin@ecme.com",
+    "authority": [
+      "superadmin",
+      "admin",
+      "user"
+    ],
+    "password": "scrypt$crmKAn1yaOw1UFwpn-d8sQ$UFSE5Uw_UP6voWYuoibXeOadPfORvEiaG93ICFgArvPquJjMyu66fh8_Gcylyr-ttTfsWuLto_ZhrZS2FYQ7Jg"
+  },
+  {
+    "userId": "21",
+    "avatar": "",
+    "userName": "John Doe",
+    "email": "admin-01@ecme.com",
+    "authority": [
+      "admin",
+      "user"
+    ],
+    "password": "scrypt$zQWPcY0ZK8u_XOqtBfw2iw$MrwpXwkdghZVdNgp6ZnKShcOpLDA9VD-KFBLJjxExfQ2FqJI8CRnozpo0E9sH_e2ZNqOAugx1zvs2smbvfmXAA"
+  },
+  {
+    "userId": "22",
+    "avatar": "",
+    "userName": "Sofia",
+    "email": "sofia@ecme.com",
+    "authority": [
+      "admin",
+      "user"
+    ],
+    "password": "scrypt$QxdddxMdcFJ_8BVM9gPgBg$dhz2xwfOIY4GYB4obrGT9Nlk7AKbwlDSpPRKgkn5lTIP9kEnMzcwQA7-Dbkmx7-H_eaksII3ll51ERiYWCo2Jg",
+    "canAuthorizeVideo": true
+  },
+  {
+    "userId": "31",
+    "avatar": "",
+    "userName": "Client Demo",
+    "email": "client@ecme.com",
+    "authority": [
+      "client"
+    ],
+    "password": "scrypt$pzpYBOzBuIdil3YKBj_Z2A$rDjDa9pcPonajV8TEfkwb86HqsJS_03_iFuGkMk4FQs4ElTbmeWnOA1lIUeRZTtwoTuizK_S6m922bTG8-d-HA"
+  }
+]
