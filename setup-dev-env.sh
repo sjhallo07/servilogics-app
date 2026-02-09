@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-# Ecme-lite-cesar - Development Setup Script
+# servilogics-app - Development Setup Script
 # Version: 1.0.0
 # Description: Local PC setup for Copilot integration
 # ============================================
@@ -16,7 +16,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_NAME="Ecme-lite-cesar"
+PROJECT_NAME="servilogics-app"
 PROJECT_DIR="$(pwd)"
 BACKEND_PORT=3001
 FRONTEND_PORT=5173

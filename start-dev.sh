@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🚀 Starting Ecme-lite-cesar development environment..."
+echo "🚀 servilogics-app development environment..."
 
 require_cmd() {
     if ! command -v "$1" >/dev/null 2>&1; then

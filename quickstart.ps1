@@ -101,7 +101,7 @@ function Install-IfMissing {
     }
 }
 
-function Ensure-Env {
+function Test-OrCreateEnv {
     param([string]$Target, [string]$Example)
     if (Test-Path $Target) {
         Write-Host "✅ Found $(Split-Path $Target -Leaf)" -ForegroundColor Green
@@ -177,8 +177,8 @@ Check-NodeVersion
 Write-Host ""
 
 Write-Host "Checking environment files..." -ForegroundColor Blue
-Ensure-Env (Join-Path $PSScriptRoot '.env') (Join-Path $PSScriptRoot '.env.example')
-Ensure-Env (Join-Path $PSScriptRoot 'backend/.env') (Join-Path $PSScriptRoot 'backend/.env.example')
+Test-OrCreateEnv (Join-Path $PSScriptRoot '.env') (Join-Path $PSScriptRoot '.env.example')
+Test-OrCreateEnv (Join-Path $PSScriptRoot 'backend/.env') (Join-Path $PSScriptRoot 'backend/.env.example')
 Write-Host ""
 
 if (-not $NoInstall) {

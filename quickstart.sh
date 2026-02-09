@@ -38,7 +38,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 echo "========================================="
-echo "🗺️  Servilogics Quickstart"
+echo "🗺️  servilogics-app Quickstart"
 echo "========================================="
 echo ""
 

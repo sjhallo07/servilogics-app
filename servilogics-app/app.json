@@ -68,7 +68,7 @@
     },
     "extra": {
       "API_BASE_URL": "http://192.168.100.82:3001/api",
-      "WEB_APP_URL": "http://192.168.100.145:5173",
+      "WEB_APP_URL": "http://192.168.100.82:5173",
       "router": {},
       "eas": {
         "projectId": "3f169799-1e03-415a-9cdd-f7e151b2f882"
