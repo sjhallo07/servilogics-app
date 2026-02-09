@@ -67,7 +67,7 @@
       "reactCompiler": true
     },
     "extra": {
-      "API_BASE_URL": "http://192.168.100.145:3001/api",
+      "API_BASE_URL": "http://192.168.100.82:3001/api",
       "WEB_APP_URL": "http://192.168.100.145:5173",
       "router": {},
       "eas": {

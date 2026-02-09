@@ -4,7 +4,6 @@ import 'react-native-gesture-handler'
 import AppNavigator from './src/navigation/AppNavigator'
 
 LogBox.ignoreLogs([
-  'props.pointerEvents is deprecated. Use style.pointerEvents',
   '"shadow*" style props are deprecated. Use "boxShadow".',
   'Image: style.resizeMode is deprecated. Please use props.resizeMode.',
   'Image: style.tintColor is deprecated. Please use props.tintColor.',

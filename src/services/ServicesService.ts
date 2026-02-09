@@ -1,25 +1,19 @@
-import type { Service } from '@/@types/services'
-import ApiService from './ApiService'
+import appConfig from '@/configs/app.config'
+import { createServicesClient } from '@servilogics/shared/services'
+import type { GetServicesParams, Service } from '@servilogics/shared/services'
 
-export interface GetServicesParams {
-    category?: string
-    sector?: string
-    available?: boolean
-}
+const servicesClient = createServicesClient({ baseUrl: appConfig.apiPrefix })
+
+export type { GetServicesParams, Service }
 
 export async function getServices(params?: GetServicesParams): Promise<Service[]> {
-    const response = await ApiService.fetchDataWithAxios<Service[]>({
-        url: '/services',
-        method: 'get',
-        params,
-    })
-    return response
+    return servicesClient.getServices(params)
 }
 
 export async function getServiceById(serviceId: string): Promise<Service> {
-    const response = await ApiService.fetchDataWithAxios<Service>({
-        url: `/services/${serviceId}`,
-        method: 'get',
-    })
-    return response
+    const service = await servicesClient.getServiceById(serviceId)
+    if (!service) {
+        throw new Error('Service not found')
+    }
+    return service
 }

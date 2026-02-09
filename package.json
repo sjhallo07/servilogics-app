@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.2.0",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "servilogics-app"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
@@ -25,6 +29,7 @@
     "docker:logs:dev": "docker-compose -f docker-compose.dev.yml logs -f"
   },
   "dependencies": {
+    "@servilogics/shared": "file:packages/shared",
     "@floating-ui/react": "^0.27.16",
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
