@@ -109,5 +109,18 @@
   "powershell.developer.traceDap": true,
   "powershell.analyzeOpenDocumentsOnly": true,
   "powershell.debugging.createTemporaryIntegratedConsole": true,
-  "powershell.startAsLoginShell.linux": true
+  "powershell.startAsLoginShell.linux": true,
+  "mdb.useSampleDocsInCopilot": true,
+  "mongodbLanguageServer.trace.server": {
+    "verbosity": "verbose"
+  },
+  "mdb.presetConnections": [
+    {
+      "name": "sample_mflix",
+      "connectionString": "mongodb://atlas-sql-698805239f3865872fe7ffee-tokdal.a.query.mongodb.net/sample_mflix?ssl=true&authSource=admin"
+    }
+  ],
+  "mdb.mcp.server": "autoStartEnabled",
+  "mdb.mcp.apiClientSecret": "al-BGipeBwhQJ-N8RSLVrA_abKyfmZ_AWJMTImtPG41QTP",
+  "mdb.mcp.apiClientId": "6767b585-1007-43d8-9930-c1b814733225"
 }

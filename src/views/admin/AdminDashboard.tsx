@@ -351,22 +351,22 @@ const VideoConferencePanel = () => {
                 <div className="flex-1 space-y-3">
                     <div className="flex gap-3 flex-wrap">
                         <button
-                            onClick={requestCamera}
                             disabled={status === 'requesting'}
                             className={`px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed`}
+                            onClick={requestCamera}
                         >
                             {status === 'requesting' ? 'Requesting camera...' : 'Start camera preview'}
                         </button>
                         <button
-                            onClick={stopCamera}
                             disabled={!stream}
                             className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={stopCamera}
                         >
                             Stop
                         </button>
                         <button
-                            onClick={toggleClientAccess}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition ${clientAuthorized ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
+                            onClick={toggleClientAccess}
                         >
                             {clientAuthorized ? 'Revoke client access' : 'Authorize client video' }
                         </button>
@@ -392,10 +392,10 @@ const VideoConferencePanel = () => {
                 <div className="flex-1 bg-black rounded-lg overflow-hidden relative min-h-[240px]">
                     <video
                         ref={videoRef}
-                        className="w-full h-full object-cover"
                         autoPlay
                         muted
                         playsInline
+                        className="w-full h-full object-cover"
                     />
                     {status !== 'ready' && (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-200 text-sm bg-black/60 text-center px-4">

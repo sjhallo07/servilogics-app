@@ -212,7 +212,7 @@ const ClientManagement = () => {
 
             {error && (
                 <div className="mb-6">
-                    <Alert type="danger" showIcon>
+                    <Alert showIcon type="danger">
                         {error}
                     </Alert>
                 </div>
@@ -350,8 +350,8 @@ const ClientManagement = () => {
                         <input
                             type="file"
                             accept=".csv"
-                            onChange={(e) => setImportFile(e.target.files?.[0] || null)}
                             className="text-sm text-gray-600 dark:text-gray-300"
+                            onChange={(e) => setImportFile(e.target.files?.[0] || null)}
                         />
                         <div className="mt-3">
                             <Button variant="solid" disabled={!importFile} onClick={handleImport}>

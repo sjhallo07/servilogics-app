@@ -114,8 +114,8 @@ const AdminSettings = () => {
                                     </label>
                                     <Input
                                         value={contact.label}
-                                        onChange={(e) => updateContact(index, 'label', e.target.value)}
                                         placeholder={`Admin ${index + 1}`}
+                                        onChange={(e) => updateContact(index, 'label', e.target.value)}
                                     />
                                 </div>
                                 <div className="flex-1">
@@ -124,8 +124,8 @@ const AdminSettings = () => {
                                     </label>
                                     <Input
                                         value={contact.phone}
-                                        onChange={(e) => updateContact(index, 'phone', e.target.value)}
                                         placeholder="+584244342107"
+                                        onChange={(e) => updateContact(index, 'phone', e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -165,7 +165,7 @@ const AdminSettings = () => {
                     <Button variant="default" onClick={addContact}>
                         Add another contact
                     </Button>
-                    <Button variant="solid" onClick={handleSave} loading={saving}>
+                    <Button variant="solid" loading={saving} onClick={handleSave}>
                         Save changes
                     </Button>
                 </div>
