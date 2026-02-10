@@ -9,7 +9,7 @@
  * - Worker management and location tracking
  * - Inventory management
  * - Payment processing (PayPal SDK, Mercado Libre API)
- * - Real-time notifications
+ * - Real-time notifications via WebSocket
  * 
  * Future integrations planned:
  * - PayPal SDK for payments
@@ -23,6 +23,7 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import http from 'http'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import authRouter from './routes/auth.js'
@@ -32,13 +33,18 @@ import servicesRouter from './routes/services.js'
 import workersRouter from './routes/workers.js'
 import settingsRouter from './routes/settings.js'
 import clientsRouter from './routes/clients.js'
+import { initWebSocket } from './utils/websocket.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: path.join(__dirname, '../.env') })
 dotenv.config({ path: path.join(__dirname, '../.env.local'), override: true })
 
 const app = express()
+const server = http.createServer(app)
 const PORT = process.env.PORT || 3001
+
+// Initialize WebSocket server
+const io = initWebSocket(server)
 
 // Middleware
 app.use(cors())
@@ -59,6 +65,7 @@ app.get('/api/health', (req, res) => {
         message: 'RepairPro API is running',
         version: '1.0.0',
         timestamp: new Date().toISOString(),
+        websocket: io ? 'enabled' : 'disabled',
     })
 })
 
@@ -66,9 +73,10 @@ app.get('/api/health', (req, res) => {
 
 // Start server (skip when running tests)
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
+    server.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 RepairPro API server running on port ${PORT}`)
         console.log(`📍 Health check: http://localhost:${PORT}/api/health`)
+        console.log(`🔌 WebSocket server listening on port ${PORT}`)
         // Lazy-load events router and Mongo only outside tests
         // Lazy-load uploads router
         import('./routes/uploads.js')
@@ -96,4 +104,5 @@ if (process.env.NODE_ENV !== 'test') {
     })
 }
 
+export { io }
 export default app
