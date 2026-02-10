@@ -308,6 +308,23 @@ export async function ensureIndexes() {
     { key: { 'subject.id': 1 }, name: 'subjectId_idx' },
     { key: { actorId: 1 }, name: 'actorId_idx' },
     { key: { timestamp: -1 }, name: 'timestamp_idx' },
+    { key: { 'location': '2dsphere' }, name: 'location_geo_idx', sparse: true },
+  ]);
+
+  // Geolocation index for workers collection
+  // Uses a sparse 2dsphere index on the optional GeoJSON 'location' field.
+  // The legacy 'currentLocation' field ({lat, lng}) remains for backward compat.
+  const workersCol = getCollection(process.env.MONGODB_COLLECTION_WORKERS || 'workers');
+  await workersCol.createIndexes([
+    { key: { id: 1 }, name: 'worker_id_idx', unique: true },
+    { key: { 'location': '2dsphere' }, name: 'worker_geo_idx', sparse: true },
+  ]);
+
+  // Geolocation index for clients collection
+  const clientsCol = getCollection(process.env.MONGODB_COLLECTION_CLIENTS || 'clients');
+  await clientsCol.createIndexes([
+    { key: { id: 1 }, name: 'client_id_idx', unique: true },
+    { key: { 'location': '2dsphere' }, name: 'client_geo_idx', sparse: true },
   ]);
 }
 
