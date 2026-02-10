@@ -5,13 +5,7 @@ param(
     [switch]$FrontendOnly
 )
 
-# Color definitions
-$Colors = @{
-    Red = 'Red'
-    Green = 'Green'
-    Yellow = 'Yellow'
-    Blue = 'Cyan'
-}
+# Console output helpers (uses inline -ForegroundColor values)
 
 function Show-Banner {
     Write-Host ""
@@ -59,7 +53,7 @@ if ($Help) {
     exit 0
 }
 
-function Require-Cmd {
+function Test-CommandExists {
     param([string]$Name)
     if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
         Write-Host "❌ Missing required command: $Name" -ForegroundColor Red
@@ -67,7 +61,7 @@ function Require-Cmd {
     }
 }
 
-function Check-NodeVersion {
+function Test-NodeVersion {
     try {
         $versionString = (& node -v) -replace '^v',''
         $major = [int]($versionString.Split('.')[0])
@@ -164,6 +158,8 @@ function Cleanup {
     Write-Host "✅ Cleanup complete" -ForegroundColor Green
 }
 
+# Ensure cleanup runs when the PowerShell session exits
+Register-EngineEvent -SourceIdentifier PowerShell.Exiting -Action { Cleanup } | Out-Null
 # Set error action
 $ErrorActionPreference = 'Stop'
 
@@ -171,9 +167,9 @@ $ErrorActionPreference = 'Stop'
 Show-Banner
 
 Write-Host "Checking requirements..." -ForegroundColor Blue
-Require-Cmd node
-Require-Cmd npm
-Check-NodeVersion
+Test-CommandExists node
+Test-CommandExists npm
+Test-NodeVersion
 Write-Host ""
 
 Write-Host "Checking environment files..." -ForegroundColor Blue
@@ -202,40 +198,56 @@ if ($env:PORT -match '^\d+$') { $backendPort = [int]$env:PORT }
 $frontendPort = 5173
 if ($env:FRONTEND_PORT -match '^\d+$') { $frontendPort = [int]$env:FRONTEND_PORT }
 
-if (-not $FrontendOnly) {
-    if (-not (Start-Backend -Port $backendPort)) {
-        exit 1
-    }
+# Validate mutually exclusive switches
+if ($FrontendOnly -and $BackendOnly) {
+    Write-Host "Error: -BackendOnly and -FrontendOnly cannot be used together." -ForegroundColor Red
+    exit 1
 }
 
-if ($BackendOnly) {
-    Write-Host "✅ Backend started successfully!" -ForegroundColor Green
-    Write-Host "  API URL: http://localhost:$backendPort" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "Press Ctrl+C to stop" -ForegroundColor Blue
-    Write-Host ""
-    
-    try {
-        while ($script:BackendProc -and -not $script:BackendProc.HasExited) {
-            Start-Sleep -Seconds 1
-        }
-    } catch {
-        # Handle Ctrl+C
-    }
-} else {
-    Write-Host "✅ All services started successfully!" -ForegroundColor Green
+if ($FrontendOnly) {
+    Write-Host "✅ Frontend started successfully!" -ForegroundColor Green
     Write-Host ""
     Write-Host "Access your application:" -ForegroundColor Blue
     Write-Host "  Frontend:  http://localhost:$frontendPort" -ForegroundColor Green
-    Write-Host "  Backend:   http://localhost:$backendPort" -ForegroundColor Green
-    Write-Host "  Health:    http://localhost:$backendPort/api/health" -ForegroundColor Green
-    Write-Host "" 
-    Write-Host "Mobile apps (run in separate terminals):" -ForegroundColor Blue
-    Write-Host "  Classic Expo app:   cd mobile-app; npx expo start" -ForegroundColor Green
-    Write-Host "  Expo Router app:    cd servilogics-app/servilogics-app; npx expo start" -ForegroundColor Green
     Write-Host ""
-    Write-Host "Press Ctrl+C to stop all services" -ForegroundColor Blue
+    Write-Host "Press Ctrl+C to stop frontend" -ForegroundColor Blue
     Write-Host ""
-    
+
     Start-Frontend -Port $frontendPort
+} else {
+    if (-not (Start-Backend -Port $backendPort)) {
+        exit 1
+    }
+
+    if ($BackendOnly) {
+        Write-Host "✅ Backend started successfully!" -ForegroundColor Green
+        Write-Host "  API URL: http://localhost:$backendPort" -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Press Ctrl+C to stop" -ForegroundColor Blue
+        Write-Host ""
+        
+        try {
+            while ($script:BackendProc -and -not $script:BackendProc.HasExited) {
+                Start-Sleep -Seconds 1
+            }
+        } catch {
+            # Handle Ctrl+C
+        }
+    } else {
+        Write-Host "✅ All services started successfully!" -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Access your application:" -ForegroundColor Blue
+        Write-Host "  Frontend:  http://localhost:$frontendPort" -ForegroundColor Green
+        Write-Host "  Backend:   http://localhost:$backendPort" -ForegroundColor Green
+        Write-Host "  Health:    http://localhost:$backendPort/api/health" -ForegroundColor Green
+        Write-Host "" 
+        Write-Host "Mobile apps (run in separate terminals):" -ForegroundColor Blue
+        Write-Host "  Classic Expo app:   cd mobile-app; npx expo start" -ForegroundColor Green
+        Write-Host "  Expo Router app:    cd servilogics-app/servilogics-app; npx expo start" -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Press Ctrl+C to stop all services" -ForegroundColor Blue
+        Write-Host ""
+        
+        Start-Frontend -Port $frontendPort
+    }
 }
