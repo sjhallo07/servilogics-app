@@ -30,7 +30,11 @@ export function initWebSocket(httpServer) {
     // Receive location updates from mobile/frontend and broadcast
     socket.on('worker:location', (data) => {
       const { workerId, lat, lng } = data || {}
-      if (workerId && lat != null && lng != null) {
+      if (
+        workerId &&
+        typeof lat === 'number' && lat >= -90 && lat <= 90 &&
+        typeof lng === 'number' && lng >= -180 && lng <= 180
+      ) {
         io.emit('worker:location:update', { workerId, lat, lng, timestamp: Date.now() })
       }
     })

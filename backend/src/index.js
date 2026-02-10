@@ -73,6 +73,8 @@ app.get('/api/health', (req, res) => {
 
 // Start server (skip when running tests)
 if (process.env.NODE_ENV !== 'test') {
+    // Bind to 0.0.0.0 so the API is reachable from local network devices (mobile).
+    // In production, restrict access via firewall rules or a reverse proxy.
     server.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 RepairPro API server running on port ${PORT}`)
         console.log(`📍 Health check: http://localhost:${PORT}/api/health`)
