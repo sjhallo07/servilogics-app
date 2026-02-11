@@ -7,14 +7,20 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies with verbose output
+RUN npm ci --verbose
 
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Verify source files exist
+RUN ls -la src/ || echo "src/ not found"
+
+# Build the application with verbose output
+RUN npm run build --verbose || (echo "Build failed, showing directory:" && ls -la /app && exit 1)
+
+# Verify dist exists
+RUN ls -la /app/dist/ || (echo "dist/ not found after build" && exit 1)
 
 # Stage 2: Production image with nginx
 FROM nginx:alpine

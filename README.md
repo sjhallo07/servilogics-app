@@ -1,4 +1,39 @@
-# servilogics app - Professional Repair Services Application
+
+  # ============================================
+  # servilogics-app- Development Environment
+  # ============================================
+  
+  # Application
+  NODE_ENV=development
+  APP_PORT=5173
+  API_PORT=3001
+  
+  # Maps Configuration
+  MAP_PROVIDER=leaflet
+  VITE_MAP_PROVIDER=leaflet
+  VITE_API_URL=http://192.168.100.82:3001
+  
+  # Google Maps (optional - get from https://console.cloud.google.com)
+  # VITE_GOOGLE_MAPS_API_KEY=your_key_here
+  
+  # Mapbox (optional)
+  # VITE_MAPBOX_ACCESS_TOKEN=your_token_here
+  
+  # Features
+  VITE_ENABLE_WORKERS_MAP=true
+  VITE_ENABLE_INVENTORY=true
+  VITE_ENABLE_QUOTES=true
+  
+  # Defaults
+  VITE_DEFAULT_CURRENCY=USD
+  VITE_DEFAULT_LANGUAGE=en
++ 
++ # CORS
++ CORS_ORIGIN=http://localhost:5173,http://192.168.100.82:5173
+  
+  # Copilot
+  COPILOT_ENABLED=true
+  # servilogics app - Professional Repair Services Application
 
 ![IBM Logo](https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg)
 
