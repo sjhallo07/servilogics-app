@@ -1,9 +1,9 @@
-import cookiesStorage from '@/utils/cookiesStorage'
-import appConfig from '@/configs/app.config'
-import { TOKEN_NAME_IN_STORAGE } from '@/constants/api.constant'
+import cookiesStorage from '../utils/cookiesStorage'
+import appConfig from '../configs/app.config'
+import { TOKEN_NAME_IN_STORAGE } from '../constants/api.constant'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { User } from '@/@types/auth'
+import type { User } from '../@types/auth'
 
 type Session = {
     signedIn: boolean
@@ -19,7 +19,8 @@ type AuthAction = {
     setUser: (payload: User) => void
 }
 
-const getPersistStorage = () => {
+const getPersistStorage = () =>
+{
     if (appConfig.accessTokenPersistStrategy === 'localStorage') {
         return localStorage
     }
@@ -66,10 +67,12 @@ export const useSessionUser = create<AuthState & AuthAction>()(
     ),
 )
 
-export const useToken = () => {
+export const useToken = () =>
+{
     const storage = getPersistStorage()
 
-    const setToken = (token: string) => {
+    const setToken = (token: string) =>
+    {
         storage.setItem(TOKEN_NAME_IN_STORAGE, token)
     }
 

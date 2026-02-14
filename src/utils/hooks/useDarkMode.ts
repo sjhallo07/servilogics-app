@@ -1,12 +1,13 @@
-import type { Mode } from '@/@types/theme'
-import { THEME_ENUM } from '@/constants/theme.constant'
-import { useThemeStore } from '@/store/themeStore'
+import type { Mode } from '../../@types/theme'
+import { THEME_ENUM } from '../../constants/theme.constant'
+import { useThemeStore } from '../../store/themeStore'
 import { useEffect } from 'react'
 
 function useDarkMode(): [
     isEnabled: boolean,
     onModeChange: (mode: Mode) => void,
-] {
+]
+{
     const mode = useThemeStore((state) => state.mode)
     const setMode = useThemeStore((state) => state.setMode)
 
@@ -23,12 +24,14 @@ function useDarkMode(): [
 
     const isEnabled = appliedMode === MODE_DARK
 
-    const onModeChange = (nextMode: Mode) => {
+    const onModeChange = (nextMode: Mode) =>
+    {
         setMode(nextMode)
     }
 
     // Apply class to <html> based on applied mode
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (typeof window === 'undefined') {
             return
         }
@@ -39,7 +42,8 @@ function useDarkMode(): [
     }, [isEnabled])
 
     // When in 'system' mode, respond to OS theme changes
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (typeof window === 'undefined') {
             return
         }
@@ -47,7 +51,8 @@ function useDarkMode(): [
             return
         }
         const media = window.matchMedia('(prefers-color-scheme: dark)')
-        const handleChange = (e: MediaQueryListEvent) => {
+        const handleChange = (e: MediaQueryListEvent) =>
+        {
             const root = window.document.documentElement
             if (e.matches) {
                 root.classList.remove(MODE_LIGHT)

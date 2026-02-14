@@ -1,9 +1,9 @@
 import { useRef, useImperativeHandle } from 'react'
 import AuthContext from './AuthContext'
-import appConfig from '@/configs/app.config'
-import { useSessionUser, useToken } from '@/store/authStore'
-import { apiSignIn, apiSignOut, apiSignUp } from '@/services/AuthService'
-import { REDIRECT_URL_KEY } from '@/constants/app.constant'
+import appConfig from '../configs/app.config'
+import { useSessionUser, useToken } from '../store/authStore'
+import { apiSignIn, apiSignOut, apiSignUp } from '../services/AuthService'
+import { REDIRECT_URL_KEY } from '../constants/app.constant'
 import { useNavigate } from 'react-router-dom'
 import type {
     SignInCredential,
@@ -12,7 +12,7 @@ import type {
     OauthSignInCallbackPayload,
     User,
     Token,
-} from '@/@types/auth'
+} from '../@types/auth'
 import type { ReactNode, Ref } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
@@ -22,10 +22,12 @@ export type IsolatedNavigatorRef = {
     navigate: NavigateFunction
 }
 
-const IsolatedNavigator = ({ ref }: { ref: Ref<IsolatedNavigatorRef> }) => {
+const IsolatedNavigator = ({ ref }: { ref: Ref<IsolatedNavigatorRef> }) =>
+{
     const navigate = useNavigate()
 
-    useImperativeHandle(ref, () => {
+    useImperativeHandle(ref, () =>
+    {
         return {
             navigate,
         }
@@ -34,7 +36,8 @@ const IsolatedNavigator = ({ ref }: { ref: Ref<IsolatedNavigatorRef> }) => {
     return <></>
 }
 
-function AuthProvider({ children }: AuthProviderProps) {
+function AuthProvider({ children }: AuthProviderProps)
+{
     const signedIn = useSessionUser((state) => state.session.signedIn)
     const user = useSessionUser((state) => state.user)
     const setUser = useSessionUser((state) => state.setUser)
@@ -47,7 +50,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     const navigatorRef = useRef<IsolatedNavigatorRef>(null)
 
-    const redirect = () => {
+    const redirect = () =>
+    {
         const search = window.location.search
         const params = new URLSearchParams(search)
         const redirectUrl = params.get(REDIRECT_URL_KEY)
@@ -57,7 +61,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         )
     }
 
-    const handleSignIn = (tokens: Token, user?: User) => {
+    const handleSignIn = (tokens: Token, user?: User) =>
+    {
         setToken(tokens.accessToken)
         setSessionSignedIn(true)
 
@@ -66,13 +71,15 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
-    const handleSignOut = () => {
+    const handleSignOut = () =>
+    {
         setToken('')
         setUser({})
         setSessionSignedIn(false)
     }
 
-    const signIn = async (values: SignInCredential): AuthResult => {
+    const signIn = async (values: SignInCredential): AuthResult =>
+    {
         try {
             const resp = await apiSignIn(values)
             if (resp) {
@@ -96,7 +103,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
-    const signUp = async (values: SignUpCredential): AuthResult => {
+    const signUp = async (values: SignUpCredential): AuthResult =>
+    {
         try {
             const resp = await apiSignUp(values)
             if (resp) {
@@ -120,7 +128,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
-    const signOut = async () => {
+    const signOut = async () =>
+    {
         try {
             await apiSignOut()
         } finally {
@@ -130,7 +139,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
     const oAuthSignIn = (
         callback: (payload: OauthSignInCallbackPayload) => void,
-    ) => {
+    ) =>
+    {
         callback({
             onSignIn: handleSignIn,
             redirect,

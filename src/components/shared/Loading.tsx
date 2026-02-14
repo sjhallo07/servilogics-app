@@ -1,20 +1,23 @@
-import Spinner from '@/components/ui/Spinner'
+import Spinner from '../ui/Spinner'
 import classNames from 'classnames'
-import type { CommonProps } from '@/@types/common'
+import type { CommonProps } from '../../@types/common'
 import type { ElementType, ReactNode } from 'react'
 
-interface BaseLoadingProps extends CommonProps {
+interface BaseLoadingProps extends CommonProps
+{
     asElement?: ElementType
     customLoader?: ReactNode
     loading: boolean
     spinnerClass?: string
 }
 
-interface LoadingProps extends BaseLoadingProps {
+interface LoadingProps extends BaseLoadingProps
+{
     type?: 'default' | 'cover'
 }
 
-const DefaultLoading = (props: BaseLoadingProps) => {
+const DefaultLoading = (props: BaseLoadingProps) =>
+{
     const {
         loading,
         children,
@@ -42,7 +45,8 @@ const DefaultLoading = (props: BaseLoadingProps) => {
     )
 }
 
-const CoveredLoading = (props: BaseLoadingProps) => {
+const CoveredLoading = (props: BaseLoadingProps) =>
+{
     const {
         loading,
         children,
@@ -76,7 +80,8 @@ const Loading = ({
     loading = false,
     asElement = 'div',
     ...rest
-}: LoadingProps) => {
+}: LoadingProps) =>
+{
     switch (type) {
         case 'default':
             return (

@@ -71,9 +71,9 @@ app.get('/api/health', (req, res) => {
 
 // Start server (skip when running tests)
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
-        console.log(`🚀 RepairPro API server running on port ${PORT}`)
-        console.log(`📍 Health check: http://localhost:${PORT}/api/health`)
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`🚀 RepairPro API server running on port ${PORT} (0.0.0.0)`)
+        console.log(`📍 Health check: http://192.168.100.82:${PORT}/api/health`)
         // Lazy-load events router and Mongo only outside tests
         // Lazy-load uploads router
         import('./routes/uploads.js')
