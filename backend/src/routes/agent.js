@@ -1,65 +1,42 @@
-import { Router } from 'express'
-import validateAgentRequest from '../middleware/validateAgentRequest.js'
-import { HEARTBEAT_MS, TIMEOUT_MS, MAX_NONSTREAM_RESP_BYTES } from '../utils/agentPolicy.js'
-import { initSSE, writeEvent, startHeartbeat } from '../utils/sse.js'
-import { safeFetch } from '../utils/safeFetch.js'
+import validateAgentRequest from '../backend/src/middleware/validateAgentRequest.js'
+import { HEARTBEAT_MS, TIMEOUT_MS, MAX_NONSTREAM_RESP_BYTES } from '../backend/src/utils/agentPolicy.js'
+import { safeFetch } from '../backend/src/utils/safeFetch.js'
 
-const router = Router()
+// Vercel no soporta SSE nativo, pero puedes devolver JSON
+export default async function handler(req, res) {
+  // Solo POST permitido
+  if (req.method !== 'POST') {
+    return res.status(405).json({ ok: false, error: { code: 'method_not_allowed', message: 'Only POST allowed' } });
+  }
 
-router.post('/agent', validateAgentRequest, async (req, res) => {
-    const { mode, url, method, headers, payload, context } = req.agent
+  // Validación (puedes adaptar validateAgentRequest para usar aquí)
+  // Ejemplo simple:
+  const agent = req.body.agent || req.body;
+  if (!agent || !agent.url || !agent.method) {
+    return res.status(400).json({ ok: false, error: { code: 'invalid_request', message: 'Missing agent data' } });
+  }
 
-    // Non-stream JSON mode
-    if (mode === 'json') {
-        try {
-            const result = await safeFetch({
-                url,
-                method,
-                headers,
-                body: method === 'POST' ? JSON.stringify(payload) : undefined,
-                timeoutMs: TIMEOUT_MS,
-                responseLimitBytes: MAX_NONSTREAM_RESP_BYTES,
-                stream: false,
-            })
-            return res.status(200).json({ ok: true, status: result.status, url, headers: result.headers, data: result.data, context })
-        } catch (e) {
-            const code = e?.code || 'upstream_error'
-            const status = code === 'response_too_large' ? 502 : 502
-            return res.status(status).json({ ok: false, error: { code, message: String(e.message || code) } })
-        }
-    }
+  const { mode, url, method, headers, payload, context } = agent;
 
-    // Streaming SSE mode
-    initSSE(res)
-    const stop = startHeartbeat(res, HEARTBEAT_MS)
-    let closed = false
-    req.on('close', () => {
-        closed = true
-    })
-
+  if (mode === 'json') {
     try {
-        const upstream = await safeFetch({
-            url,
-            method,
-            headers,
-            body: method === 'POST' ? JSON.stringify(payload) : undefined,
-            timeoutMs: TIMEOUT_MS,
-            stream: true,
-        })
-
-        writeEvent(res, { event: 'meta', data: { status: upstream.status, url, headers: upstream.headers, context } })
-
-        for await (const chunk of upstream.chunks()) {
-            if (closed) break
-            writeEvent(res, { event: 'chunk', data: { text: chunk, context } })
-        }
-        if (!closed) writeEvent(res, { event: 'done', data: { context } })
+      const result = await safeFetch({
+        url,
+        method,
+        headers,
+        body: method === 'POST' ? JSON.stringify(payload) : undefined,
+        timeoutMs: TIMEOUT_MS,
+        responseLimitBytes: MAX_NONSTREAM_RESP_BYTES,
+        stream: false,
+      });
+      return res.status(200).json({ ok: true, status: result.status, url, headers: result.headers, data: result.data, context });
     } catch (e) {
-        if (!closed) writeEvent(res, { event: 'error', data: { code: e?.code || 'upstream_error', message: String(e.message || 'error'), context } })
-    } finally {
-        stop()
-        if (!res.writableEnded) res.end()
+      const code = e?.code || 'upstream_error';
+      const status = code === 'response_too_large' ? 502 : 502;
+      return res.status(status).json({ ok: false, error: { code, message: String(e.message || code) } });
     }
-})
+  }
 
-export default router
+  // Para streaming/SSE, puedes devolver chunks en un array o adaptar a tu frontend
+  return res.status(501).json({ ok: false, error: { code: 'not_implemented', message: 'SSE not supported in Vercel serverless' } });
+}
