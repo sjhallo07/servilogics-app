@@ -17,7 +17,8 @@
         "esbenp.prettier-vscode",
         "ms-azuretools.vscode-docker",
         "GitHub.copilot-chat",
-        "mongodb.mongodb-vscode"
+        "mongodb.mongodb-vscode",
+        "msjsdiag.vscode-react-native"
       ],
       "settings": {
         "files.autoSave": "onFocusChange",

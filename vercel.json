@@ -4,5 +4,11 @@
             "source": "/api/(.*)",
             "destination": "/api/backend.js"
         }
+    ],
+    "crons": [
+        {
+            "path": "/api/cron",
+            "schedule": "0 10 * * *"
+        }
     ]
 }

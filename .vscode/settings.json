@@ -122,5 +122,6 @@
   ],
   "mdb.mcp.server": "autoStartEnabled",
   "mdb.mcp.apiClientSecret": "al-BGipeBwhQJ-N8RSLVrA_abKyfmZ_AWJMTImtPG41QTP",
-  "mdb.mcp.apiClientId": "6767b585-1007-43d8-9930-c1b814733225"
+  "mdb.mcp.apiClientId": "6767b585-1007-43d8-9930-c1b814733225",
+  "github.copilot.nextEditSuggestions.extendedRange": true
 }
