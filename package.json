@@ -81,7 +81,8 @@
     "tailwind-merge": "^2.6.0",
     "yet-another-react-lightbox": "^3.28.0",
     "zod": "^3.25.76",
-    "zustand": "^5.0.10"
+    "zustand": "^5.0.10",
+    "patch-package": "^6.5.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.1",
