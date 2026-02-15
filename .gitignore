@@ -40,3 +40,5 @@ mobile-app/capacitor.config.ts
 mobile-app/tsconfig.json
 src/app/
 src/modules/
+.vercel
+.env*.local
