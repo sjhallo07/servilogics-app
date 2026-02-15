@@ -69,36 +69,6 @@ app.get('/api/health', (req, res) => {
 
 // Inventory routes are handled by inventoryRouter (see above)
 
-// Start server (skip when running tests)
-if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🚀 RepairPro API server running on port ${PORT} (0.0.0.0)`)
-        console.log(`📍 Health check: http://192.168.100.82:${PORT}/api/health`)
-        // Lazy-load events router and Mongo only outside tests
-        // Lazy-load uploads router
-        import('./routes/uploads.js')
-            .then(({ default: uploadsRouter }) => {
-                app.use('/api/uploads', uploadsRouter)
-            })
-            .catch((e) => {
-                console.warn('⚠️ Uploads route init failed:', e.message)
-            })
-
-        // Lazy-load events router
-        import('./routes/events.js')
-            .then(({ default: eventsRouter }) => {
-                app.use('/api/events', eventsRouter)
-                return import('./utils/db.js')
-            })
-            .then(({ connectMongo, ensureIndexes }) => {
-                return connectMongo().then(() => ensureIndexes()).catch((e) => {
-                    console.warn('⚠️ Mongo connection failed:', e.message)
-                })
-            })
-            .catch((e) => {
-                console.warn('⚠️ Events route init failed:', e.message)
-            })
-    })
-}
+// ...existing code...
 
 export default app
