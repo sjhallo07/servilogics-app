@@ -31,7 +31,8 @@
     "react-native-screens": "~4.16.0",
     "react-native-web": "0.21.0"
   },
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "patch-package": "^8.0.0"
   },
   "private": true
