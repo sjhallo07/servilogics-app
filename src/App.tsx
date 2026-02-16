@@ -5,6 +5,7 @@ import Views from './views'
 import { BrowserRouter } from 'react-router-dom'
 import appConfig from './configs/app.config'
 import './locales'
+import { Analytics } from '@vercel/analytics/react'
 
 if (appConfig.enableMock) {
     import('./mock')
@@ -21,6 +22,7 @@ function App()
                     </Layout>
                 </AuthProvider>
             </BrowserRouter>
+            <Analytics />
         </Theme>
     )
 }
