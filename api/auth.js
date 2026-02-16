@@ -108,6 +108,77 @@ export default async function handler(req, res) {
         }
     }
 
+    // SIGN IN with Google (expects { id_token })
+    if (req.method === 'POST' && req.url.endsWith('/sign-in/google')) {
+        const body = parseBody() || {};
+        const { id_token } = body;
+        if (!id_token) return res.status(400).json({ message: 'id_token is required' });
+        try {
+            const infoRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(id_token)}`);
+            if (!infoRes.ok) return res.status(401).json({ message: 'Invalid Google token' });
+            const info = await infoRes.json();
+            const email = info.email;
+            const email_verified = info.email_verified === 'true' || info.email_verified === true;
+            const name = info.name || info.email?.split('@')[0] || 'Google User';
+            if (!email || !email_verified) return res.status(401).json({ message: 'Google account email not verified' });
+
+            let user = await getUserByEmailDb(email).catch(() => null);
+            if (!user) {
+                user = await createUserDb({ userName: name, email, password: '', authority: ['client'] });
+            }
+
+            return res.status(200).json({ token: signJwt({ sub: user.userId, email: user.email, authority: user.authority || ['client'] }, getJwtSecret(), getJwtExpiry()), user: sanitizeUser(user) });
+        } catch (err) {
+            console.error('Google sign-in failed:', err && err.stack ? err.stack : err);
+            return res.status(500).json({ message: 'Google sign-in failed' });
+        }
+    }
+
+    // SIGN IN with GitHub (expects { access_token })
+    if (req.method === 'POST' && req.url.endsWith('/sign-in/github')) {
+        const body = parseBody() || {};
+        const { access_token } = body;
+        if (!access_token) return res.status(400).json({ message: 'access_token is required' });
+        try {
+            const userRes = await fetch('https://api.github.com/user', {
+                headers: {
+                    Authorization: `token ${access_token}`,
+                    Accept: 'application/vnd.github+json',
+                    'User-Agent': 'ecme-lite',
+                },
+            });
+            if (!userRes.ok) return res.status(401).json({ message: 'Invalid GitHub token' });
+            const gh = await userRes.json();
+            let email = gh.email;
+            const name = gh.name || gh.login || (email ? email.split('@')[0] : 'GitHub User');
+
+            // If email not present, fetch emails endpoint
+            if (!email) {
+                const emailsRes = await fetch('https://api.github.com/user/emails', {
+                    headers: { Authorization: `token ${access_token}`, Accept: 'application/vnd.github+json', 'User-Agent': 'ecme-lite' },
+                });
+                if (emailsRes.ok) {
+                    const emails = await emailsRes.json();
+                    const primary = Array.isArray(emails) && emails.find((e) => e.primary && e.verified);
+                    const anyVerified = Array.isArray(emails) && emails.find((e) => e.verified);
+                    email = primary?.email || anyVerified?.email || null;
+                }
+            }
+
+            if (!email) return res.status(401).json({ message: 'Could not determine GitHub account email' });
+
+            let user = await getUserByEmailDb(email).catch(() => null);
+            if (!user) {
+                user = await createUserDb({ userName: name, email, password: '', authority: ['client'] });
+            }
+
+            return res.status(200).json({ token: signJwt({ sub: user.userId, email: user.email, authority: user.authority || ['client'] }, getJwtSecret(), getJwtExpiry()), user: sanitizeUser(user) });
+        } catch (err) {
+            console.error('GitHub sign-in failed:', err && err.stack ? err.stack : err);
+            return res.status(500).json({ message: 'GitHub sign-in failed' });
+        }
+    }
+
     // Method not allowed / not found
     return res.status(404).json({ message: 'Not found' });
 }
