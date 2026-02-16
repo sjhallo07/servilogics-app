@@ -1,9 +1,17 @@
-import {
-    DEFAULT_USERS,
-    createUserDb,
-    getUserByEmailDb,
-} from '../backend/src/utils/db.js';
-import { hashPassword, signJwt, verifyPassword } from '../backend/src/utils/security.js';
+let DEFAULT_USERS, createUserDb, getUserByEmailDb;
+let hashPassword, signJwt, verifyPassword;
+
+const ensureImports = async () => {
+    if (getUserByEmailDb) return;
+    const db = await import('../backend/src/utils/db.js');
+    DEFAULT_USERS = db.DEFAULT_USERS;
+    createUserDb = db.createUserDb;
+    getUserByEmailDb = db.getUserByEmailDb;
+    const sec = await import('../backend/src/utils/security.js');
+    hashPassword = sec.hashPassword;
+    signJwt = sec.signJwt;
+    verifyPassword = sec.verifyPassword;
+};
 
 const sanitizeUser = (user) => ({
     userId: user.userId,
@@ -23,6 +31,13 @@ const getJwtSecret = () => process.env.JWT_SECRET || 'change-me';
 const getJwtExpiry = () => process.env.JWT_EXPIRES_IN || '24h';
 
 export default async function handler(req, res) {
+    try {
+        await ensureImports();
+    } catch (err) {
+        console.error('Failed to load dependencies in auth handler:', err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+
     if (req.method === 'POST' && req.url.endsWith('/sign-in')) {
         const { email, password } = req.body || {};
         if (!email || !password) {
