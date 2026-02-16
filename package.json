@@ -44,6 +44,7 @@
     "@tiptap/pm": "^2.27.2",
     "@tiptap/react": "^2.27.2",
     "@tiptap/starter-kit": "^2.27.2",
+    "@vercel/analytics": "^1.6.1",
     "@visx/pattern": "^3.13.0-alpha.0",
     "axios": "^1.7.7",
     "axios-mock-adapter": "^2.1.0",
@@ -60,6 +61,7 @@
     "lodash": "^4.17.23",
     "marked": "^15.0.12",
     "mongodb": "^7.1.0",
+    "patch-package": "^6.5.0",
     "react": "19.0.0",
     "react-apexcharts": "^1.9.0",
     "react-csv": "^2.2.2",
@@ -81,8 +83,7 @@
     "tailwind-merge": "^2.6.0",
     "yet-another-react-lightbox": "^3.28.0",
     "zod": "^3.25.76",
-    "zustand": "^5.0.10",
-    "patch-package": "^6.5.0"
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.1",
