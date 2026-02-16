@@ -1,4 +1,38 @@
 version: '3.8'
+services:
+  mongodb:
+    image: mongo:6.0
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    environment:
+      - PORT=3001
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
+      - NODE_ENV=production
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodata:
+version: '3.8'
 
 services:
   # Backend API Service

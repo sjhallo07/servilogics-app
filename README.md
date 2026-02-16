@@ -138,6 +138,25 @@ Troubleshooting
 - npm or yarn
 - Docker and Docker Compose (optional, for containerized deployment)
 
+## Configuración de red local (LAN)
+
+Si necesitas acceder a la app y a la API desde otros dispositivos en tu red local, sigue estos pasos rápidos:
+
+- Copia el bloque de "CONFIGURACIÓN LOCAL DE RED" desde `./.env.example` y pégalo en tu `.env` local (o en `.env.production` según corresponda). Ajusta la IP `192.168.100.82` a la IP fija de tu máquina en la LAN.
+- Asegúrate de que la variable `VITE_API_URL` apunte a `http://<TU_IP_LOCAL>:3001` y que `CORS_ORIGIN` incluya los orígenes con esa IP (p. ej. `http://192.168.100.82:5173`).
+- Si estás ejecutando servicios dentro de Docker, expone los puertos correctamente (`3001` para backend, `5173` para frontend) y usa la red bridge por defecto; para acceder desde la LAN usa la IP del host (no `localhost`).
+- En Linux puedes asignar una IP adicional temporalmente con (requiere root):
+
+```bash
+# Reemplaza `eth0` por tu interfaz real (ver `ip link`) y ajusta la IP/máscara
+sudo ip addr add 192.168.100.82/24 dev eth0
+```
+
+- Para hacerlo persistente, configura la IP en el administrador de red de tu distribución (NetworkManager, /etc/network/interfaces, netplan, etc.).
+- Comprueba que el firewall permite los puertos necesarios y que otros dispositivos pueden hacer ping a la IP configurada.
+
+Nota: No elimines ni modifiques la IP local en `VITE_API_URL` ni en `CORS_ORIGIN` si dependes de acceso desde la red local; si cambias la IP, actualiza ambos valores.
+
 ## Installation
 
 ### Standard Installation

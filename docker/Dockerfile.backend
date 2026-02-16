@@ -1,0 +1,12 @@
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY backend/package.json backend/package-lock.json* ./
+RUN npm ci --production
+COPY backend/ ./
+
+FROM node:18-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app /app
+EXPOSE 3001
+CMD ["node","src/index.js"]
