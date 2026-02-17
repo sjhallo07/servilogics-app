@@ -1,0 +1,55 @@
+[
+{"created":1771349766817,"date":1771349766817,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349766817511934824200000","text":"Running build in Washington, D.C., USA (East) – iad1","type":"stdout","serial":"1771349766817511934824200000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349766818,"date":1771349766818,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349766818511934824200000","text":"Build machine configuration: 2 cores, 8 GB","type":"stdout","serial":"1771349766818511934824200000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349766931,"date":1771349766931,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349766931511934824200001","text":"Cloning github.com/sjhallo07/servilogics-app (Branch: main, Commit: 7a73809)","type":"stdout","serial":"1771349766931511934824200001","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349767713,"date":1771349767713,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349767713511934824200000","text":"Cloning completed: 782.000ms","type":"stdout","serial":"1771349767713511934824200000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349768614,"date":1771349768614,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349768614511934824200000","text":"Restored build cache from previous deployment (CHRSE9bTg2gpE19Q1a2PJbst2JiL)","type":"stdout","serial":"1771349768614511934824200000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349768910,"date":1771349768910,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349768910319936300400000","text":"Running \"vercel build\"","type":"stdout","serial":"1771349768910319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349769574,"date":1771349769574,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349769574319936300400000","text":"Vercel CLI 50.18.0","type":"stderr","serial":"1771349769574319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349770338,"date":1771349770338,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349770338319936300400000","text":"Running \"install\" command: `npm install --prefix=`...","type":"stdout","serial":"1771349770338319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349774998,"date":1771349774998,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349774998319936300400000","text":"","type":"stdout","serial":"1771349774998319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349774999,"date":1771349774999,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349774999319936300400000","text":"added 1 package, removed 545 packages, and audited 1146 packages in 4s","type":"stdout","serial":"1771349774999319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349774999,"date":1771349774999,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349774999319936300400001","text":"","type":"stdout","serial":"1771349774999319936300400001","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349774999,"date":1771349774999,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349774999319936300400002","text":"181 packages are looking for funding","type":"stdout","serial":"1771349774999319936300400002","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349774999,"date":1771349774999,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349774999319936300400003","text":"  run `npm fund` for details","type":"stdout","serial":"1771349774999319936300400003","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775001,"date":1771349775001,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775001319936300400000","text":"","type":"stdout","serial":"1771349775001319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775002,"date":1771349775002,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775002319936300400000","text":"2 low severity vulnerabilities","type":"stdout","serial":"1771349775002319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775002,"date":1771349775002,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775002319936300400001","text":"","type":"stdout","serial":"1771349775002319936300400001","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775002,"date":1771349775002,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775002319936300400002","text":"To address all issues (including breaking changes), run:","type":"stdout","serial":"1771349775002319936300400002","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775002,"date":1771349775002,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775002319936300400003","text":"  npm audit fix --force","type":"stdout","serial":"1771349775002319936300400003","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775003,"date":1771349775003,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775003319936300400000","text":"","type":"stdout","serial":"1771349775003319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775003,"date":1771349775003,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775003319936300400001","text":"Run `npm audit` for details.","type":"stdout","serial":"1771349775003319936300400001","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775179,"date":1771349775179,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775179319936300400000","text":"Running \"npm run build\"","type":"stdout","serial":"1771349775179319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775274,"date":1771349775274,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775274319936300400000","text":"","type":"stdout","serial":"1771349775274319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775275,"date":1771349775275,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775275319936300400000","text":"> servilogics-app@1.2.0 build","type":"stdout","serial":"1771349775275319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775275,"date":1771349775275,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775275319936300400001","text":"> cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build","type":"stdout","serial":"1771349775275319936300400001","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775275,"date":1771349775275,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775275319936300400002","text":"","type":"stdout","serial":"1771349775275319936300400002","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."}}
+,
+{"created":1771349775281,"date":1771349775281,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775281319936300400000","text":"sh: line 1: cross-env: command not found","type":"stderr","serial":"1771349775281319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."},"level":"error"}
+,
+{"created":1771349775292,"date":1771349775292,"deploymentId":"dpl_Ey4hkgwGmNH7UGKyaYYpJdUXmyiG","id":"1771349775292319936300400000","text":"Error: Command \"npm run build\" exited with 127","type":"stderr","serial":"1771349775292319936300400000","info":{"type":"build","name":"bld_p5lu034ac","entrypoint":"."},"level":"error"}
+]

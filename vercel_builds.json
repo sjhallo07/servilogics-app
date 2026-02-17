@@ -1,0 +1,1 @@
+{"builds":[{"id":"bld_d24s9ci6c","deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","entrypoint":".","readyState":"READY","readyStateAt":1771349447554,"createdAt":1771349447554,"createdIn":"sfo1","use":"@vercel/vc-build","config":{},"output":[],"fingerprint":null}]}

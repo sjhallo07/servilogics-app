@@ -1,0 +1,17 @@
+[
+{"created":1771349448109,"date":1771349448109,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349448109555768944300000","text":"Running build in Washington, D.C., USA (East) – iad1","type":"stdout","serial":"1771349448109555768944300000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349448110,"date":1771349448110,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349448110555768944300000","text":"Build machine configuration: 2 cores, 8 GB","type":"stdout","serial":"1771349448110555768944300000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349448235,"date":1771349448235,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349448235555768944300000","text":"Cloning github.com/sjhallo07/servilogics-app (Branch: main, Commit: 4abc4cb)","type":"stdout","serial":"1771349448235555768944300000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349448750,"date":1771349448750,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349448750555768944300000","text":"Cloning completed: 515.000ms","type":"stdout","serial":"1771349448750555768944300000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349450356,"date":1771349450356,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349450356555768944300001","text":"Restored build cache from previous deployment (CHRSE9bTg2gpE19Q1a2PJbst2JiL)","type":"stdout","serial":"1771349450356555768944300001","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349450643,"date":1771349450643,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349450643468011350200000","text":"Running \"vercel build\"","type":"stdout","serial":"1771349450643468011350200000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349451194,"date":1771349451194,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349451194468011350200000","text":"Vercel CLI 50.18.0","type":"stderr","serial":"1771349451194468011350200000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."}}
+,
+{"created":1771349451362,"date":1771349451362,"deploymentId":"dpl_8c4GuNgTYmtxkEXfQQJRgWvTscFG","id":"1771349451362468011350200000","text":"Error: Function Runtimes must have a valid version, for example `now-php@1.0.0`.","type":"stderr","serial":"1771349451362468011350200000","info":{"type":"build","name":"bld_d24s9ci6c","entrypoint":"."},"level":"error"}
+]
