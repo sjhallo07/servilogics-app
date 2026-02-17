@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 vite build",
     "preview": "vite preview",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write",
