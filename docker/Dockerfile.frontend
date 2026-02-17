@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 COPY . ./
+ARG VITE_API_PREFIX
+ENV VITE_API_PREFIX=${VITE_API_PREFIX}
 RUN npm run build
 
 # Production stage - serve with nginx
