@@ -9,5 +9,8 @@
             "path": "/api/cron",
             "schedule": "0 10 * * *"
         }
-    ]
+    ],
+    "metadata": {
+        "lastRedeployTrigger": "2026-02-17T00:00:00Z"
+    }
 }
