@@ -11,6 +11,7 @@ BACKEND_ONLY=false
 FRONTEND_ONLY=false
 DOCKER_MODE=false
 DO_ASSIGN_IP=false
+FAST_MODE=false
 
 usage() {
     cat <<EOF
@@ -37,6 +38,7 @@ while [[ $# -gt 0 ]]; do
         -d|--docker) DOCKER_MODE=true ;;
             -a|--assign-ip) DO_ASSIGN_IP=true ;;
         --ignore-prereqs) IGNORE_PREREQS=true ;;
+        -s|--fast) FAST_MODE=true ;;
         -f|--frontend-only) FRONTEND_ONLY=true ;;
         *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
     esac
@@ -73,25 +75,30 @@ check_node_version() {
     fi
 }
 
-echo "📋 Checking prerequisites..."
-require_cmd node
-require_cmd npm
-require_cmd bash
-require_cmd lsof
-require_cmd curl
-require_cmd grep
-check_node_version
-if command -v node >/dev/null 2>&1; then
-    echo "✅ Node.js $(node -v)"
+if [ "$FAST_MODE" = true ]; then
+    echo "⚡ Fast mode enabled — skipping prerequisite checks and slow validations"
+    IGNORE_PREREQS=true
 else
-    echo "⚠️  Node.js not available"
+    echo "📋 Checking prerequisites..."
+    require_cmd node
+    require_cmd npm
+    require_cmd bash
+    require_cmd lsof
+    require_cmd curl
+    require_cmd grep
+    check_node_version
+    if command -v node >/dev/null 2>&1; then
+        echo "✅ Node.js $(node -v)"
+    else
+        echo "⚠️  Node.js not available"
+    fi
+    if command -v npm >/dev/null 2>&1; then
+        echo "✅ npm $(npm -v)"
+    else
+        echo "⚠️  npm not available"
+    fi
+    echo ""
 fi
-if command -v npm >/dev/null 2>&1; then
-    echo "✅ npm $(npm -v)"
-else
-    echo "⚠️  npm not available"
-fi
-echo ""
 
 # Env helpers
 ensure_env() {
@@ -181,7 +188,11 @@ validate_vite_api_url() {
     fi
 }
 
-validate_vite_api_url
+if [ "$FAST_MODE" = true ]; then
+    echo "⚡ Fast mode: skipping VITE_API_URL validation"
+else
+    validate_vite_api_url
+fi
 
 # Install deps
 install_deps() {
